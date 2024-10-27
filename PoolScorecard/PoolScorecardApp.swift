@@ -11,7 +11,7 @@ import SwiftUI
 struct PoolScorecardApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ChooserView()
         }
     }
 }
