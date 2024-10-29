@@ -10,10 +10,10 @@ import SwiftUI
 struct ChooserView: View {
     var body: some View {
         NavigationStack {
-            NavigationLink("2 Players") {TwoPersonView()}
-            NavigationLink("3 Players") {TwoPersonView()}
-            NavigationLink("4 Players") {TwoPersonView()}
-            NavigationLink("5 Players") {TwoPersonView()}
+            NavigationLink("2 Players") {StripeSolidView(players: 2)}
+            NavigationLink("3 Players") {StripeSolidView(players: 1)}
+            NavigationLink("4 Players") {StripeSolidView(players: 4)}
+            NavigationLink("5 Players") {StripeSolidView(players: 1)}
         }
         .font(.system(size: 200))
     }
