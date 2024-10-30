@@ -16,6 +16,10 @@ struct ChooserView: View {
             NavigationLink("5 Players") {StripeSolidView(players: 1)}
         }
         .font(.system(size: 200))
+        .minimumScaleFactor(0.01)
+        .lineLimit(1)
+        .padding()
+
     }
 }
 

@@ -92,7 +92,9 @@ struct StripeSolidView: View {
         .textFieldStyle(.roundedBorder)
         .multilineTextAlignment(.center)
         .padding()
+        .minimumScaleFactor(0.01)
     }
+       
     
     
     var swapBalls: some View {
@@ -108,8 +110,10 @@ struct StripeSolidView: View {
             VStack{
                 Image(systemName: "arrow.trianglehead.swap")
                     .font(.system(size: 100))
+                    .minimumScaleFactor(0.01)
                 Text("Swap Names")
                     .font(.system(size: 40))
+                    .minimumScaleFactor(0.01)
             }
         }
     }
@@ -117,7 +121,6 @@ struct StripeSolidView: View {
     var swapTeams: some View {
         Button(action: {
             let playerArray = [Player1, Player2, Player3, Player4].shuffled()
-            print(playerArray)
             Player1 = playerArray[0]
             Player2 = playerArray[1]
             Player3 = playerArray[2]
@@ -127,9 +130,13 @@ struct StripeSolidView: View {
             VStack{
                 Image(systemName: "person.line.dotted.person.fill")
                     .font(.system(size: 100))
+                    .minimumScaleFactor(0.01)
                 Text("Change Teams")
                     .font(.system(size: 40))
+                    .minimumScaleFactor(0.01)
+
             }
+
         }
     }
 
