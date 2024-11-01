@@ -31,9 +31,10 @@ struct StripeSolidView: View {
             showBottomButtons
         }
         .font(.system(size: nameSize))
-        .textFieldStyle(.roundedBorder)
+        .textFieldStyle(.automatic)
         .multilineTextAlignment(.center)
-        .padding()
+        .padding(50)
+        .background(Color(red: 0.153, green: 0.365, blue: 0.167).gradient)
         .minimumScaleFactor(0.01)
 
     }
@@ -58,7 +59,7 @@ struct StripeSolidView: View {
         
     func show(_ balls: Range<Int>) -> some View {
         HStack {
-            ForEach(balls) { ball in
+            ForEach(balls, id: \.self) { ball in
                 PoolBallView(num: ball)
             }
         }
