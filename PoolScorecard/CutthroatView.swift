@@ -9,23 +9,32 @@ import SwiftUI
 
 struct CutthroatView: View {
     
-    @State private var Player1 = ""
-    @State private var Player2 = ""
-    @State private var Player3 = ""
+//    @State private var Player1 = ""
+//    @State private var Player2 = ""
+//    @State private var Player3 = ""
     
-    private let low = [1, 2, 3, 4, 5]
-    private let mid = [6, 7 ,8, 9, 10]
-    private let hi = [11, 12, 13, 14, 15]
-    
+    @State private var names = ["", "", ""]
+    @State private var results = [
+        [false, false, false],
+        [false, false, false],
+        [false, false, false]
+    ]
+
+    private let lowBalls = [1, 2, 3, 4, 5]
+    private let midBalls = [6, 7 ,8, 9, 10]
+    private let hiBalls = [11, 12, 13, 14, 15]
+
+
     var body: some View {
         let nameSize: CGFloat = 100
         VStack {
             Grid() {
                 ballGroups
-                nameRow1
-                nameRow2
-                nameRow3
+                nameRow(0)
+                nameRow(1)
+                nameRow(2)
             }
+            Spacer()
             bottomRow
         }
         .font(.system(size: nameSize))
@@ -39,14 +48,14 @@ struct CutthroatView: View {
     var ballGroups: some View {
         GridRow {
             Text("")
-            OneBallGroup(low)
-            OneBallGroup(mid)
-            OneBallGroup(hi)
+            OneBallGroup(lowBalls)
+            OneBallGroup(midBalls)
+            OneBallGroup(hiBalls)
         }
     }
     
     func OneBallGroup(_ balls: [Int]) -> some View {
-        let ballSize = 80.0 //should calculate based on geometery
+//        let ballSize = 80.0 //should calculate based on geometery
         return VStack {
             ballRow([balls[0], balls[1]])
             ballRow([balls[2]])
@@ -75,33 +84,69 @@ struct CutthroatView: View {
         }
     }
     
-    
-    var nameRow1: some View {
+   
+    func nameRow(_ which: Int) -> some View {
         GridRow {
-            TextField("Player 1", text: $Player1)
-            Text("L")
-            Text("M")
-            Text("H")
+            TextField("Player \(which+1)", text: $names[which])
+            statButton(which, "L")
+            statButton(which, "M")
+            statButton(which, "H")
+        }
+
+    }
+    
+    
+    func statButton(_ which: Int, _ level: String) -> some View {
+        let indicators = ["L", "M", "H"]
+        var otherIndicators = indicators
+        let i = indicators.firstIndex(of: level)!
+        otherIndicators.remove(at: i)
+        print(otherIndicators)
+        
+        var otherPlayers = [0, 1, 2]
+        otherPlayers.remove(at: which)
+        
+        return ZStack {
+            Text(level)
+            if results[which][i] {
+                Text("X").foregroundStyle(.red)
+            } else {
+                if results[otherPlayers[0]][i] && results[otherPlayers[1]][i] {
+                    Circle().stroke(lineWidth: 3).aspectRatio(0.75, contentMode: .fit)
+                }
+            }
+        }
+        .onTapGesture {
+            if !results[otherPlayers[0]][i] || !results[otherPlayers[1]][i] {
+                results[which][i].toggle()
+            }
         }
     }
     
-    var nameRow2: some View {
-        GridRow {
-            TextField("Player 2", text: $Player2)
-            Text("L")
+    func MButton(_ which: Int) -> some View {
+        ZStack {
             Text("M")
-            Text("H")
+            if results[which][1] {
+                Text("X").foregroundStyle(.red)
+            }
+        }
+        .onTapGesture {
+            results[which][1].toggle()
         }
     }
-    
-    var nameRow3: some View {
-        GridRow {
-            TextField("Player 3", text: $Player3)
-            Text("L")
-            Text("M")
+
+    func HButton(_ which: Int) -> some View {
+        ZStack {
             Text("H")
+            if results[which][2] {
+                Text("X").foregroundStyle(.red)
+            }
+        }
+        .onTapGesture {
+            results[which][2].toggle()
         }
     }
+
     
     var bottomRow: some View {
         HStack {
