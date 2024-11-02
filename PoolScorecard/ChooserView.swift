@@ -7,14 +7,29 @@
 
 import SwiftUI
 
+
 struct ChooserView: View {
+    let feltColor = Color(red: 0.153, green: 0.365, blue: 0.167).gradient
+    
     var body: some View {
         NavigationStack {
-            NavigationLink("2 Players") {StripeSolidView(players: 2)}
-            NavigationLink("3 Players") {CutthroatView()}
-            NavigationLink("4 Players") {StripeSolidView(players: 4)}
-            NavigationLink("5 Players") {StripeSolidView(players: 1)}
+            ZStack {
+                Rectangle().foregroundStyle(feltColor)
+                VStack {
+                    Text("Select Number of Players")
+                    NavigationLink("🙄🤓") {StripeSolidView(players: 2)}
+                    NavigationLink("🙈🙉🙊") {CutthroatView()}
+                    NavigationLink("🐛🦋🐝🪲") {StripeSolidView(players: 4)}
+                    NavigationLink("🤾🏼⛹🏽‍♀️🏌️🤺🏋🏽‍♀️") {StripeSolidView(players: 1)}
+                }
+                .padding()
+            }
+            .ignoresSafeArea()
         }
+//        .navigationTitle("My List")
+//        .scrollContentBackground(.hidden)// Add this
+//        .background(feltColor)
+//        .backgroundStyle(feltColor)
         .font(.system(size: 200))
         .minimumScaleFactor(0.01)
         .lineLimit(1)
