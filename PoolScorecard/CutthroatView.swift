@@ -37,17 +37,20 @@ struct CutthroatView: View {
         .font(.system(size: nameSize))
         .textFieldStyle(.automatic)
         .multilineTextAlignment(.center)
-        .padding(50)
+//        .padding(50)
+        .padding()
         .background(feltColor)
         .minimumScaleFactor(0.01)
     }
     
     var ballGroups: some View {
         GridRow {
+            Spacer()
             newGame
             OneBallGroup(lowBalls)
             OneBallGroup(midBalls)
             OneBallGroup(hiBalls)
+            Spacer()
         }
     }
     
@@ -83,10 +86,12 @@ struct CutthroatView: View {
     
      func nameRow(_ which: Int) -> some View {
         GridRow {
+            Spacer()
             TextField("Player \(which+1)", text: $names[which])
             statButton(which, "L")
             statButton(which, "M")
             statButton(which, "H")
+            Spacer()
         }
         
     }
@@ -122,6 +127,7 @@ struct CutthroatView: View {
                 }
             }
         }
+
         .onTapGesture {
             if results[otherPlayers[0]][i] && results[otherPlayers[1]][i] {
                 return
