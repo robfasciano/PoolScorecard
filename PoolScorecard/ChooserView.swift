@@ -35,7 +35,6 @@ struct ChooserView: View {
                         Spacer()
                     }
                     .padding()
-                    
                 }
             }
             .font(.system(size: baseFontSize))

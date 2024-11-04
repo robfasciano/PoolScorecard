@@ -54,26 +54,76 @@ struct CutthroatView: View {
         }
     }
     
+    //TODO: add geometry reader
     func OneBallGroup(_ balls: [Int]) -> some View {
-        return VStack {
-            ballRow([balls[0], balls[1]])
-            ballRow([balls[2]])
-            ballRow([balls[3], balls[4]])
-        }
-        .padding()
-    }
-    
-    func ballRow(_ balls: [Int]) -> some View {
-        let ballSize = 80.0 //should calculate based on geometery
-        return HStack {
-            PoolBallView(num: balls[0])
-                .frame(idealWidth: ballSize, idealHeight: ballSize)
-            if balls.count == 2 {
-                PoolBallView(num: balls[1])
-                    .frame(idealWidth: ballSize, idealHeight: ballSize)
+        GeometryReader {geometry in
+            let ballPadding = 5.0
+            let iPad = 5.0 //padding between ball (HStack) when 2 in row
+            let ballWidth = geometry.size.width - 2*ballPadding
+            if geometry.size.width > geometry.size.height{
+                VStack(spacing: 0) {
+                    Spacer()
+                    ballRow([balls[0], balls[1]], HSpacing: iPad)
+                        .frame(width:  ballWidth + iPad)
+                    ballRow([balls[2]])
+                        .frame(width:  ballWidth / 2 )
+                    ballRow([balls[3], balls[4]], HSpacing: iPad)
+                        .frame(width:  ballWidth + iPad)
+                }
+            } else {
+                VStack {
+                    Spacer()
+                    ballRow([balls[0]])
+                    ballRow([balls[1]])
+                    ballRow([balls[2]])
+                    ballRow([balls[3]])
+                    ballRow([balls[4]])
+                }
             }
         }
+        .padding(0)
     }
+
+    
+    
+    
+    
+//    func NEWOneBallGroup(_ balls: [Int]) -> some View {
+//        let myPadding = 5.0
+//        return GeometryReader {geometry in
+//            if geometry.size.height > geometry.size.width {
+//                VStack {
+//                    
+//                }
+//            } else {
+//                VStack {
+//                    Spacer()
+//                    let ballWidth = geometry.size.width - 2*myPadding
+//                    ballRow([balls[0], balls[1]])
+//                        .frame(width:  ballWidth)
+//                    ballRow([balls[2]])
+//                        .frame(width:  ballWidth / 2)
+//                    ballRow([balls[3], balls[4]])
+//                        .frame(width:  ballWidth)
+//                }
+//                
+//            }
+//            
+//        }
+//        .padding(myPadding)
+//    }
+
+    
+    
+    func ballRow(_ balls: [Int], HSpacing: CGFloat = 0) -> some View {
+        HStack(spacing: HSpacing) {
+                PoolBallView(num: balls[0])
+                if balls.count == 2 {
+                    PoolBallView(num: balls[1])
+                }
+            }
+        }
+    
     
     func show(_ balls: Range<Int>) -> some View {
         HStack {
@@ -261,6 +311,7 @@ struct CutthroatView: View {
                 Text("New Game")
                     .font(.system(size: 40))
                     .minimumScaleFactor(0.01)
+                    .lineLimit(2)
             }
         }
     }

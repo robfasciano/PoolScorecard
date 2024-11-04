@@ -36,21 +36,21 @@ struct PoolBallView: View {
                     }
             }
             .clipShape(Circle())
-            .shadow(color: .black, radius: 15)
-            .rotationEffect(Angle(degrees: Double.random(in: -35...35))) //this may not quite work as codes
+            .shadow(color: .black, radius: 5)
+//            .rotationEffect(Angle(degrees: Double.random(in: -35...35))) //this may not quite work as coded
     }
 }
 
 
 #Preview {
-    HStack{
+    HStack(spacing: 0) {
         PoolBallView(num: 1)
         PoolBallView(num: 2)
         PoolBallView(num: 3)
         PoolBallView(num: 4)
         PoolBallView(num: 5)
     }
-    HStack{
+    HStack(spacing: 1) {
         PoolBallView(num: 6)
         PoolBallView(num: 7)
         PoolBallView(num: 8)
