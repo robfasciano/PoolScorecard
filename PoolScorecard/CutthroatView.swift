@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+var landscape: Bool = true
+
 struct CutthroatView: View {
     let feltColor = Color(red: 0.153, green: 0.365, blue: 0.167).gradient
     
@@ -24,23 +26,33 @@ struct CutthroatView: View {
     
     var body: some View {
         let nameSize: CGFloat = 100
-        VStack {
-            Spacer()
-            Grid() {
-                ballGroups
-                nameRow(0)
-                nameRow(1)
-                nameRow(2)
+        ZStack{
+            GeometryReader {geometry in //TODO: this landscape variable only gets updated when first entering the View
+                landscape = true
+                if geometry.size.height > geometry.size.width {
+                    landscape = false
+                }
+                return VStack {
+                    Spacer()
+                    Grid() {
+                        ballGroups
+                        nameRow(0)
+                        nameRow(1)
+                        nameRow(2)
+//                        nameRow(0, height: (geometry.size.height / 3) / (landscape ? 2 : 2))
+//                        nameRow(1, height: (geometry.size.height / 3) / (landscape ? 2 : 2))
+//                        nameRow(2, height: (geometry.size.height / 3) / (landscape ? 2 : 2))
+                    }
+                    Spacer()
+                }
+                .font(.system(size: nameSize))
+                .textFieldStyle(.automatic)
+                .multilineTextAlignment(.center)
+                .padding()
+                .background(feltColor)
+                .minimumScaleFactor(0.001)
             }
-            Spacer()
         }
-        .font(.system(size: nameSize))
-        .textFieldStyle(.automatic)
-        .multilineTextAlignment(.center)
-//        .padding(50)
-        .padding()
-        .background(feltColor)
-        .minimumScaleFactor(0.01)
     }
     
     var ballGroups: some View {
@@ -54,13 +66,13 @@ struct CutthroatView: View {
         }
     }
     
-    //TODO: add geometry reader
     func OneBallGroup(_ balls: [Int]) -> some View {
         GeometryReader {geometry in
             let ballPadding = 5.0
             let iPad = 5.0 //padding between ball (HStack) when 2 in row
             let ballWidth = geometry.size.width - 2*ballPadding
-            if geometry.size.width > geometry.size.height{
+//            if geometry.size.width > geometry.size.height {
+                if landscape {
                 VStack(spacing: 0) {
                     Spacer()
                     ballRow([balls[0], balls[1]], HSpacing: iPad)
@@ -86,63 +98,45 @@ struct CutthroatView: View {
 
     
     
-    
-    
-//    func NEWOneBallGroup(_ balls: [Int]) -> some View {
-//        let myPadding = 5.0
-//        return GeometryReader {geometry in
-//            if geometry.size.height > geometry.size.width {
-//                VStack {
-//                    
-//                }
-//            } else {
-//                VStack {
-//                    Spacer()
-//                    let ballWidth = geometry.size.width - 2*myPadding
-//                    ballRow([balls[0], balls[1]])
-//                        .frame(width:  ballWidth)
-//                    ballRow([balls[2]])
-//                        .frame(width:  ballWidth / 2)
-//                    ballRow([balls[3], balls[4]])
-//                        .frame(width:  ballWidth)
-//                }
-//                
-//            }
-//            
-//        }
-//        .padding(myPadding)
-//    }
-
-    
-    
     func ballRow(_ balls: [Int], HSpacing: CGFloat = 0) -> some View {
         HStack(spacing: HSpacing) {
+            Spacer()
                 PoolBallView(num: balls[0])
                 if balls.count == 2 {
                     PoolBallView(num: balls[1])
                 }
+            Spacer()
             }
         }
     
-    
-    func show(_ balls: Range<Int>) -> some View {
-        HStack {
-            ForEach(balls, id: \.self) { ball in
-                PoolBallView(num: ball)
-            }
-        }
-    }
-    
+  
+    func nameRow(_ which: Int, height: CGFloat) -> some View {
+       GridRow {
+           Spacer()
+           TextField("Player \(which+1)", text: $names[which])
+               
+           statButton(which, "L")
+           statButton(which, "M")
+           statButton(which, "H")
+           Spacer()
+       }.minimumScaleFactor(0.001)
+             .frame(maxHeight: height)
+            .border(.red)
+       
+   }
+
     
      func nameRow(_ which: Int) -> some View {
         GridRow {
             Spacer()
             TextField("Player \(which+1)", text: $names[which])
+                
             statButton(which, "L")
             statButton(which, "M")
             statButton(which, "H")
             Spacer()
-        }
+        }.minimumScaleFactor(0.001)
+             .border(.red)
         
     }
     
@@ -165,7 +159,7 @@ struct CutthroatView: View {
         return ZStack {
             if results[player][i] {
                 Text(level)
-                Text("❌").foregroundStyle(.red)
+                Text("❌")
             } else {
                 if results[otherPlayers[0]][i] && results[otherPlayers[1]][i] {
                     circleALevel(level)
@@ -177,7 +171,6 @@ struct CutthroatView: View {
                 }
             }
         }
-
         .onTapGesture {
             if results[otherPlayers[0]][i] && results[otherPlayers[1]][i] {
                 return
@@ -190,7 +183,6 @@ struct CutthroatView: View {
             if setCompleted(player, i) {
                 findCircles()
             }
-
         }
     }
     
@@ -306,11 +298,13 @@ struct CutthroatView: View {
         {
             VStack{
                 Image(systemName: "arrow.trianglehead.counterclockwise.rotate.90")
-                    .font(.system(size: 100))
-                    .minimumScaleFactor(0.01)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .font(.system(size: 80))
+                    .minimumScaleFactor(0.001)
                 Text("New Game")
                     .font(.system(size: 40))
-                    .minimumScaleFactor(0.01)
+                    .minimumScaleFactor(0.001)
                     .lineLimit(2)
             }
         }

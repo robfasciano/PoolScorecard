@@ -50,7 +50,7 @@ struct PoolBallView: View {
         PoolBallView(num: 4)
         PoolBallView(num: 5)
     }
-    HStack(spacing: 1) {
+    HStack(spacing: 5) {
         PoolBallView(num: 6)
         PoolBallView(num: 7)
         PoolBallView(num: 8)

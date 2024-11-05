@@ -9,6 +9,7 @@ import SwiftUI
 
 
 struct ChooserView: View {
+
     let feltColor = Color(red: 0.153, green: 0.365, blue: 0.167).gradient
     let baseFontSize = 400.0
     
@@ -34,6 +35,7 @@ struct ChooserView: View {
                             .frame(maxWidth: frameWidth)
                         Spacer()
                     }
+//                    .animation(.default)
                     .padding()
                 }
             }

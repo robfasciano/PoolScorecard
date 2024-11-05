@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct PoolScorecardApp: App {
+
     var body: some Scene {
         WindowGroup {
             ChooserView()
         }
     }
+//    UIApplication.shared.isIdleTimerDisabled = false
+
 }
