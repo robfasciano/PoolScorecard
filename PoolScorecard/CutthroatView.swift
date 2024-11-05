@@ -36,12 +36,12 @@ struct CutthroatView: View {
                     Spacer()
                     Grid() {
                         ballGroups
-                        nameRow(0)
-                        nameRow(1)
-                        nameRow(2)
-//                        nameRow(0, height: (geometry.size.height / 3) / (landscape ? 2 : 2))
-//                        nameRow(1, height: (geometry.size.height / 3) / (landscape ? 2 : 2))
-//                        nameRow(2, height: (geometry.size.height / 3) / (landscape ? 2 : 2))
+//                        nameRow(0)
+//                        nameRow(1)
+//                        nameRow(2)
+                        nameRow(0, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
+                        nameRow(1, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
+                        nameRow(2, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
                     }
                     Spacer()
                 }
@@ -113,32 +113,29 @@ struct CutthroatView: View {
     func nameRow(_ which: Int, height: CGFloat) -> some View {
        GridRow {
            Spacer()
-           TextField("Player \(which+1)", text: $names[which])
+           TextField("Player \(which+1)", text: $names[which]).frame(maxHeight: height)
                
-           statButton(which, "L")
-           statButton(which, "M")
-           statButton(which, "H")
+           statButton(which, "L").frame(maxHeight: height)
+           statButton(which, "M").frame(maxHeight: height)
+           statButton(which, "H").frame(maxHeight: height)
            Spacer()
        }.minimumScaleFactor(0.001)
-             .frame(maxHeight: height)
-            .border(.red)
-       
    }
 
     
-     func nameRow(_ which: Int) -> some View {
-        GridRow {
-            Spacer()
-            TextField("Player \(which+1)", text: $names[which])
-                
-            statButton(which, "L")
-            statButton(which, "M")
-            statButton(which, "H")
-            Spacer()
-        }.minimumScaleFactor(0.001)
-             .border(.red)
-        
-    }
+//     func nameRow(_ which: Int) -> some View {
+//        GridRow {
+//            Spacer()
+//            TextField("Player \(which+1)", text: $names[which])
+//                
+//            statButton(which, "L")
+//            statButton(which, "M")
+//            statButton(which, "H")
+//            Spacer()
+//        }.minimumScaleFactor(0.001)
+//             .border(.red)
+//        
+//    }
     
     
      func statButton(_ player: Int, _ level: String) -> some View {
