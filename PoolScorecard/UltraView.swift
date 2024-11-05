@@ -1,5 +1,5 @@
 //
-//  CutthroatView.swift
+//  UltraView.swift
 //  PoolScorecard
 //
 //  Created by Robert Fasciano on 11/1/24.
@@ -7,22 +7,24 @@
 
 import SwiftUI
 
-var landscape: Bool = true
-
-struct CutthroatView: View {
+struct UltraView: View {
     let feltColor = Color(red: 0.153, green: 0.365, blue: 0.167).gradient
     
-    @State private var names = ["", "", ""]
+    @State private var names = ["", "", "", "", ""]
     @State private var results = [
-        [false, false, false], //L M H for p1
-        [false, false, false], //L M H for p2
-        [false, false, false]  //L M H for p3
+        [false, false, false, false, false], //UL L M H UH for p1
+        [false, false, false, false, false], //UL L M H UH for p2
+        [false, false, false, false, false], //UL L M H UH for p3
+        [false, false, false, false, false], //UL L M H UH for p4
+        [false, false, false, false, false]  //UL L M H UH for p5
     ]
     
-    private let lowBalls = [1, 2, 3, 4, 5]
-    private let midBalls = [6, 7 ,8, 9, 10]
-    private let hiBalls = [11, 12, 13, 14, 15]
-    
+    private let ultralowBalls = [1, 2, 3]
+    private let lowBalls = [4, 5, 6]
+    private let midBalls = [7, 8, 9]
+    private let hiBalls = [10, 11, 12]
+    private let ultrahiBalls = [13, 14, 15]
+
     
     var body: some View {
         let nameSize: CGFloat = 100
@@ -39,6 +41,8 @@ struct CutthroatView: View {
                         nameRow(0, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
                         nameRow(1, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
                         nameRow(2, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
+                        nameRow(3, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
+                        nameRow(4, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
                     }
                     Spacer()
                 }
@@ -56,9 +60,11 @@ struct CutthroatView: View {
         GridRow {
             Spacer()
             newGame
+            OneBallGroup(ultralowBalls)
             OneBallGroup(lowBalls)
             OneBallGroup(midBalls)
             OneBallGroup(hiBalls)
+            OneBallGroup(ultrahiBalls)
             Spacer()
         }
     }
@@ -76,8 +82,6 @@ struct CutthroatView: View {
                         .frame(width:  ballWidth + iPad)
                     ballRow([balls[2]])
                         .frame(width:  ballWidth / 2 )
-                    ballRow([balls[3], balls[4]], HSpacing: iPad)
-                        .frame(width:  ballWidth + iPad)
                 }
             } else {
                 VStack {
@@ -85,8 +89,6 @@ struct CutthroatView: View {
                     ballRow([balls[0]])
                     ballRow([balls[1]])
                     ballRow([balls[2]])
-                    ballRow([balls[3]])
-                    ballRow([balls[4]])
                 }
             }
         }
@@ -106,22 +108,24 @@ struct CutthroatView: View {
             }
         }
     
-  
+    let indicators = ["UL", "L", "M", "H", "UH"]
+
     func nameRow(_ which: Int, height: CGFloat) -> some View {
        GridRow {
            Spacer()
            TextField("Player \(which+1)", text: $names[which]).frame(maxHeight: height)
                
-           statButton(which, "L").frame(maxHeight: height)
-           statButton(which, "M").frame(maxHeight: height)
-           statButton(which, "H").frame(maxHeight: height)
+           statButton(which, indicators[0]).frame(maxHeight: height)
+           statButton(which, indicators[1]).frame(maxHeight: height)
+           statButton(which, indicators[2]).frame(maxHeight: height)
+           statButton(which, indicators[3]).frame(maxHeight: height)
+           statButton(which, indicators[4]).frame(maxHeight: height)
            Spacer()
        }.minimumScaleFactor(0.001)
    }
 
         
      func statButton(_ player: Int, _ level: String) -> some View {
-        let indicators = ["L", "M", "H"]
         var  notIndicators = indicators
         let i = indicators.firstIndex(of: level)!
         notIndicators.remove(at: i)
@@ -132,7 +136,7 @@ struct CutthroatView: View {
             }
         }
         
-        var otherPlayers = [0, 1, 2]
+        var otherPlayers = [0, 1, 2, 3, 4]
         otherPlayers.remove(at: player)
         
         return ZStack {
@@ -140,10 +144,15 @@ struct CutthroatView: View {
                 Text(level)
                 Text("❌").opacity(0.7)
             } else {
-                if results[otherPlayers[0]][i] && results[otherPlayers[1]][i] {
+                if results[otherPlayers[0]][i] &&
+                    results[otherPlayers[1]][i] &&
+                    results[otherPlayers[2]][i] &&
+                    results[otherPlayers[3]][i] {
                     circleALevel(level)
                 } else if results[player][otherIndicators[0]] &&
-                            results[player][otherIndicators[1]] {
+                            results[player][otherIndicators[1]] &&
+                            results[player][otherIndicators[2]] &&
+                            results[player][otherIndicators[3]] {
                     circleALevel(level)
                 } else {
                     Text(level)
@@ -151,11 +160,16 @@ struct CutthroatView: View {
             }
         }
         .onTapGesture {
-            if results[otherPlayers[0]][i] && results[otherPlayers[1]][i] {
+            if results[otherPlayers[0]][i] &&
+                results[otherPlayers[1]][i] &&
+                results[otherPlayers[2]][i] &&
+                results[otherPlayers[3]][i] {
                 return
             }
             if results[player][otherIndicators[0]] &&
-                results[player][otherIndicators[1]] {
+                results[player][otherIndicators[1]] &&
+                results[player][otherIndicators[2]] &&
+                results[player][otherIndicators[3]] {
                 return
             }
             results[player][i].toggle()
@@ -172,7 +186,7 @@ struct CutthroatView: View {
                 markCount += 1
             }
         }
-        if markCount == 2 {
+        if markCount == results.count - 1 {
             return true
         }
         markCount = 0
@@ -181,7 +195,7 @@ struct CutthroatView: View {
                 markCount += 1
             }
         }
-        if markCount == 2 {
+        if markCount == results[0].count - 1 {
             return true
         }
         return false
@@ -205,7 +219,7 @@ struct CutthroatView: View {
                 markCount += 1
             }
         }
-        if markCount == 2 {
+        if markCount == results.count - 1 {
             return true
         }
         markCount = 0
@@ -214,7 +228,7 @@ struct CutthroatView: View {
                 markCount += 1
             }
         }
-        if markCount == 2 {
+        if markCount == results[0].count - 1 {
             return true
         }
         return false
@@ -264,10 +278,9 @@ struct CutthroatView: View {
         }
     }
     
-    
 }
 
 
 #Preview {
-    CutthroatView()
+    UltraView()
 }

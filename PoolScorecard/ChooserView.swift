@@ -31,7 +31,7 @@ struct ChooserView: View {
                             .frame(maxWidth: frameWidth*(3/5))
                         NavigationLink("🐛🦋🐝🪲") {StripeSolidView(players: 4)}
                             .frame(maxWidth: frameWidth*(4/5))
-                        NavigationLink("🤾🏼⛹🏽‍♀️🏌️🤺🏋🏽‍♀️") {StripeSolidView(players: 1)}
+                        NavigationLink("🤾🏼⛹🏽‍♀️🏌️🤺🏋🏽‍♀️") {UltraView()}
                             .frame(maxWidth: frameWidth)
                         Spacer()
                     }
