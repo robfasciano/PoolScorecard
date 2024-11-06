@@ -9,6 +9,11 @@ import SwiftUI
 
 struct UltraView: View {
     let feltColor = Color(red: 0.153, green: 0.365, blue: 0.167).gradient
+    enum status {
+        case unassigned
+        case assigned
+        case unknown
+    }
     
     @State private var names = ["", "", "", "", ""]
     @State private var results = [
@@ -74,8 +79,8 @@ struct UltraView: View {
             let ballPadding = 5.0
             let iPad = 5.0 //padding between ball (HStack) when 2 in row
             let ballWidth = geometry.size.width - 2*ballPadding
-//            if geometry.size.width > geometry.size.height {
-                if landscape {
+            
+            if landscape {
                 VStack(spacing: 0) {
                     Spacer()
                     ballRow([balls[0], balls[1]], HSpacing: iPad)
@@ -90,9 +95,9 @@ struct UltraView: View {
                     ballRow([balls[1]])
                     ballRow([balls[2]])
                 }
+                .padding(0)
             }
         }
-        .padding(0)
     }
 
     
@@ -144,15 +149,9 @@ struct UltraView: View {
                 Text(level)
                 Text("❌").opacity(0.7)
             } else {
-                if results[otherPlayers[0]][i] &&
-                    results[otherPlayers[1]][i] &&
-                    results[otherPlayers[2]][i] &&
-                    results[otherPlayers[3]][i] {
+                if allOtherPlayersMarked(player: player, indicator: i) {
                     circleALevel(level)
-                } else if results[player][otherIndicators[0]] &&
-                            results[player][otherIndicators[1]] &&
-                            results[player][otherIndicators[2]] &&
-                            results[player][otherIndicators[3]] {
+                } else if allOtherIndicatorsMarked(player: player, indicator: i) {
                     circleALevel(level)
                 } else {
                     Text(level)
@@ -160,24 +159,41 @@ struct UltraView: View {
             }
         }
         .onTapGesture {
-            if results[otherPlayers[0]][i] &&
-                results[otherPlayers[1]][i] &&
-                results[otherPlayers[2]][i] &&
-                results[otherPlayers[3]][i] {
+            if allOtherPlayersMarked(player: player, indicator: i) {
                 return
             }
-            if results[player][otherIndicators[0]] &&
-                results[player][otherIndicators[1]] &&
-                results[player][otherIndicators[2]] &&
-                results[player][otherIndicators[3]] {
+            if allOtherIndicatorsMarked(player: player, indicator: i) {
                 return
             }
             results[player][i].toggle()
             if setCompleted(player, i) {
-                findCircles()
+                findCircles() //FIXME: need to differentiate row vs column completion
             }
         }
     }
+    
+    func allOtherPlayersMarked(player: Int, indicator: Int) -> Bool {
+        var playerInfo: [Bool] = []
+        for i in 0..<results.count {
+            playerInfo.append(results[i][indicator])
+        }
+        playerInfo.remove(at: player)
+        if playerInfo.count(where: {$0 == true}) == playerInfo.count {
+        return true
+        }
+        return false
+    }
+    
+    
+    func allOtherIndicatorsMarked(player: Int, indicator: Int) -> Bool {
+        var indicatorInfo = results[player]
+        indicatorInfo.remove(at: indicator)
+        if indicatorInfo.count(where: {$0 == true}) == indicatorInfo.count {
+            return true
+        }
+        return false
+    }
+    
     
     func setCompleted(_ player: Int, _ indicator: Int) -> Bool {
         var markCount = 0
@@ -202,15 +218,16 @@ struct UltraView: View {
     }
     
     func findCircles() {
-        for p in 0..<results.count {
-            for i in 0..<results[0].count {
-                if isCircled(p, i) {
-                    markOtherLevels(p, i)
+        for _ in 0...3 { //some circles cause other circle to come into existance, so rinse-repeat
+            for p in 0..<results.count {
+                for i in 0..<results[0].count {
+                    if isCircled(p, i) {
+                        markOtherLevels(p, i)
+                    }
                 }
             }
         }
     }
-    
     
     func isCircled(_ player: Int, _ indicator: Int) -> Bool {
         var markCount = 0
