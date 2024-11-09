@@ -8,21 +8,11 @@
 import SwiftUI
 
 struct UltraView: View {
-    let feltColor = Color(red: 0.153, green: 0.365, blue: 0.167).gradient
-    enum status {
-        case unassigned
-        case assigned
-        case unknown
-    }
+    @ObservedObject var scorecard: ultraViewModel
     
+    let feltColor = Color(red: 0.153, green: 0.365, blue: 0.167).gradient
+        
     @State private var names = ["", "", "", "", ""]
-    @State private var results = [
-        [false, false, false, false, false], //UL L M H UH for p1
-        [false, false, false, false, false], //UL L M H UH for p2
-        [false, false, false, false, false], //UL L M H UH for p3
-        [false, false, false, false, false], //UL L M H UH for p4
-        [false, false, false, false, false]  //UL L M H UH for p5
-    ]
     
     private let ultralowBalls = [1, 2, 3]
     private let lowBalls = [4, 5, 6]
@@ -30,11 +20,11 @@ struct UltraView: View {
     private let hiBalls = [10, 11, 12]
     private let ultrahiBalls = [13, 14, 15]
 
-    
     var body: some View {
         let nameSize: CGFloat = 100
         ZStack{
-            GeometryReader {geometry in //TODO: this landscape variable only gets updated when first entering the View
+            GeometryReader {geometry in //TODO: orientation working?
+                //this landscape variable only gets updated when first entering the View
                 landscape = true
                 if geometry.size.height > geometry.size.width {
                     landscape = false
@@ -60,6 +50,9 @@ struct UltraView: View {
             }
         }
     }
+    
+    
+    
     
     var ballGroups: some View {
         GridRow {
@@ -145,125 +138,24 @@ struct UltraView: View {
         otherPlayers.remove(at: player)
         
         return ZStack {
-            if results[player][i] {
+            switch scorecard.standings(player, i) {
+            case ultraScorcard.status.checkedByClick:
                 Text(level)
-                Text("❌").opacity(0.7)
-            } else {
-                if allOtherPlayersMarked(player: player, indicator: i) {
-                    circleALevel(level)
-                } else if allOtherIndicatorsMarked(player: player, indicator: i) {
-                    circleALevel(level)
-                } else {
-                    Text(level)
-                }
+                Text("❌").opacity(0.9)
+            case ultraScorcard.status.checkedByCircle:
+                Text(level)
+                Text("❌").opacity(0.3)
+            case ultraScorcard.status.circled:
+                circleALevel(level)
+            case ultraScorcard.status.unknown:
+                Text(level)
             }
         }
         .onTapGesture {
-            if allOtherPlayersMarked(player: player, indicator: i) {
-                return
-            }
-            if allOtherIndicatorsMarked(player: player, indicator: i) {
-                return
-            }
-            results[player][i].toggle()
-            if setCompleted(player, i) {
-                findCircles() //FIXME: need to differentiate row vs column completion
-            }
+            scorecard.selectIndicator(player: player, indicator: i)
         }
     }
     
-    func allOtherPlayersMarked(player: Int, indicator: Int) -> Bool {
-        var playerInfo: [Bool] = []
-        for i in 0..<results.count {
-            playerInfo.append(results[i][indicator])
-        }
-        playerInfo.remove(at: player)
-        if playerInfo.count(where: {$0 == true}) == playerInfo.count {
-        return true
-        }
-        return false
-    }
-    
-    
-    func allOtherIndicatorsMarked(player: Int, indicator: Int) -> Bool {
-        var indicatorInfo = results[player]
-        indicatorInfo.remove(at: indicator)
-        if indicatorInfo.count(where: {$0 == true}) == indicatorInfo.count {
-            return true
-        }
-        return false
-    }
-    
-    
-    func setCompleted(_ player: Int, _ indicator: Int) -> Bool {
-        var markCount = 0
-        for p in 0..<results.count {
-            if results[p][indicator] {
-                markCount += 1
-            }
-        }
-        if markCount == results.count - 1 {
-            return true
-        }
-        markCount = 0
-        for i in 0..<results[0].count {
-            if results[player][i] {
-                markCount += 1
-            }
-        }
-        if markCount == results[0].count - 1 {
-            return true
-        }
-        return false
-    }
-    
-    func findCircles() {
-        for _ in 0...3 { //some circles cause other circle to come into existance, so rinse-repeat
-            for p in 0..<results.count {
-                for i in 0..<results[0].count {
-                    if isCircled(p, i) {
-                        markOtherLevels(p, i)
-                    }
-                }
-            }
-        }
-    }
-    
-    func isCircled(_ player: Int, _ indicator: Int) -> Bool {
-        var markCount = 0
-        for p in 0..<results.count {
-            if p != player && results[p][indicator] {
-                markCount += 1
-            }
-        }
-        if markCount == results.count - 1 {
-            return true
-        }
-        markCount = 0
-        for i in 0..<results[0].count {
-            if i != indicator && results[player][i] {
-                markCount += 1
-            }
-        }
-        if markCount == results[0].count - 1 {
-            return true
-        }
-        return false
-    }
-    
-    func markOtherLevels(_ player: Int, _ indicator: Int) {
-        for p in 0..<results.count {
-            if p != player {
-                results[p][indicator] = true
-            }
-        }
-        for i in 0..<results[0].count {
-            if i != indicator {
-                results[player][i] = true
-            }
-        }
-    }
-
         
     func circleALevel(_ level: String) -> some View {
         Text(level)
@@ -274,11 +166,7 @@ struct UltraView: View {
     
     var newGame: some View {
         Button(action: {
-            for i in 0..<results.count {
-                for j in 0..<results[0].count {
-                    results[i][j] = false
-                }
-            }
+            scorecard.clearStatus()
         })
         {
             VStack{
@@ -299,5 +187,5 @@ struct UltraView: View {
 
 
 #Preview {
-    UltraView()
+    UltraView(scorecard: ultraViewModel())
 }

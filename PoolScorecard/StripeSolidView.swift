@@ -43,14 +43,14 @@ struct StripeSolidView: View {
         HStack {
             TextField("Player 1", text: $Player1)
             if players == 4 {
-                TextField("Player 2", text: $Player3)
+                TextField("Player 3", text: $Player3)
             }
         }
     }
     
     var showBottomNames: some View{
         HStack {
-            TextField("Player 3", text: $Player2)
+            TextField("Player 2", text: $Player2)
             if players == 4 {
                 TextField("Player 4", text: $Player4)
             }

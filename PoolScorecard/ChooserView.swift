@@ -9,6 +9,7 @@ import SwiftUI
 
 
 struct ChooserView: View {
+    @StateObject var scorecard = ultraViewModel()  //this is kind of @ObservedObject??
 
     let feltColor = Color(red: 0.153, green: 0.365, blue: 0.167).gradient
     let baseFontSize = 400.0
@@ -31,7 +32,7 @@ struct ChooserView: View {
                             .frame(maxWidth: frameWidth*(3/5))
                         NavigationLink("🐛🦋🐝🪲") {StripeSolidView(players: 4)}
                             .frame(maxWidth: frameWidth*(4/5))
-                        NavigationLink("🤾🏼⛹🏽‍♀️🏌️🤺🏋🏽‍♀️") {UltraView()}
+                        NavigationLink("🤾🏼⛹🏽‍♀️🏌️🤺🏋🏽‍♀️") {UltraView(scorecard: ultraViewModel())}
                             .frame(maxWidth: frameWidth)
                         Spacer()
                     }
