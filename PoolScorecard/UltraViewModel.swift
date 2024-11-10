@@ -27,5 +27,9 @@ class ultraViewModel: ObservableObject {
     func selectIndicator(player: Int, indicator: Int) {
         model.selectIndicator(player: player, indicator: indicator)
     }
+    
+    func resetIndicator(player: Int, indicator: Int) {
+        model.resetIndicator(player: player, indicator: indicator)
+    }
 }
 

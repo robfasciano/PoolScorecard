@@ -30,61 +30,45 @@ struct ultraScorcard {
         }
     }
     
-    
-    mutating func selectIndicator(player: Int, indicator: Int) {
-        switch standings[player][indicator] {
-        case .checkedByCircle:
-            standings[player][indicator] = .checkedByClick
-        case .checkedByClick:
-            standings[player][indicator] = .unknown
-            //FIXME: may need to uncircle indicators
-        case .circled:
-            return
-        case .unknown:
-            standings[player][indicator] = .checkedByClick
-            if setCompletedInPlayer(player) { //FIXME: check if only one circle created
-                processNewCircledLevel(player: player)
-            }
-            if setCompletedinLevel(indicator) { //FIXME: check if only one circle created
-                processNewCircledPlayer(level: indicator)
-            }
-        }
-        debugStanding()
-    }
-    
-    mutating func processNewCircledLevel(player: Int) {
+    mutating func processNewCircledLevel(player: Int) -> [[Int]] {
         for l in 0..<standings[0].count {
             if standings[player][l] == .unknown {
                 standings[player][l] = .circled
             }
         }
-        processAllCircles()
+        return processAllCircles()
     }
     
-    mutating func processNewCircledPlayer(level: Int) {
+    mutating func processNewCircledPlayer(level: Int) -> [[Int]] {
         for p in 0..<standings.count {
             if standings[p][level] == .unknown {
                 standings[p][level] = .circled
             }
         }
-        processAllCircles()
+        return processAllCircles()
     }
    
-    mutating func processAllCircles() {
+    mutating func processAllCircles() -> [[Int]] {
+        var newCircles: [[Int]] = []
         for p in 0..<standings.count {
             for l in 0..<standings[0].count {
                 if standings[p][l] == .circled {
-                    markOtherIndicators(player: p, level: l)
+                    newCircles += markOtherIndicators(player: p, level: l)
                 }
             }
         }
+        return newCircles
     }
     
-    mutating func markOtherIndicators(player: Int, level: Int) {
+    mutating func markOtherIndicators(player: Int, level: Int) -> [[Int]] {
+        var newCircles: [[Int]] = []
         for p in 0..<standings.count {
             if p != player {
                 if standings[p][level] == .unknown {
                     standings[p][level] = .checkedByCircle
+                    if setCompletedInPlayer(p) {
+                        newCircles.append([p, level])
+                    }
                 }
             }
         }
@@ -92,9 +76,13 @@ struct ultraScorcard {
             if l != level {
                 if standings[player][l] == .unknown {
                     standings[player][l] = .checkedByCircle
+                    if setCompletedinLevel(l) {
+                        newCircles.append([player, l])
+                    }
                 }
             }
         }
+        return newCircles
     }
 
     
@@ -107,7 +95,6 @@ struct ultraScorcard {
             }
         }
         if markCount == standings[0].count - 1 {
-            print("completed in player")
             return true
         }
         return false
@@ -122,30 +109,69 @@ struct ultraScorcard {
             }
         }
         if markCount == standings.count - 1 {
-            print("completed in level")
             return true
         }
         return false
     }
-
     
+    //MARK: - Data Access functions
     var numPlayers:Int {
         standings.count
     }
+
+    //MARK: - User Intent functions
+    mutating func selectIndicator(player: Int, indicator: Int) {
+        switch standings[player][indicator] {
+        case .checkedByCircle:
+            standings[player][indicator] = .checkedByClick
+            if setCompletedInPlayer(player) {
+                _ = processNewCircledLevel(player: player)
+            }
+            if setCompletedinLevel(indicator) {
+                _ = processNewCircledPlayer(level: indicator)
+            }
+        case .checkedByClick:
+            standings[player][indicator] = .unknown
+            //FIXME: may need to uncircle indicators
+        case .circled:
+            return
+        case .unknown:
+            standings[player][indicator] = .checkedByClick
+            if setCompletedInPlayer(player) {
+                let newCircles = processNewCircledLevel(player: player)
+                if newCircles.count == 1 {
+                    _ = processNewCircledLevel(player: newCircles[0][0])
+                }
+            }
+            if setCompletedinLevel(indicator) {
+                let newCircles = processNewCircledPlayer(level: indicator)
+                if newCircles.count == 1 {
+                    _ = processNewCircledPlayer(level: newCircles[0][1])
+                }
+            }
+        }
+    }
     
+    mutating func resetIndicator(player: Int, indicator: Int) {
+        switch standings[player][indicator] {
+        case .checkedByCircle, .checkedByClick, .circled:
+            standings[player][indicator] = .unknown
+        case .unknown:
+            return
+        }
+    }
+
+
     mutating func clearStatus() {
-        debugStanding()
         for p in 0..<standings.count {
             for i in 0..<standings[0].count {
                 standings[p][i] = .unknown
             }
         }
-        debugStanding()
     }
     
-    //MARK: - debug functions
+    //MARK: - Debug functions
     func debugStanding() {
-//        var test1: String
         var toPrint = ""
         for p in 0..<standings.count {
             toPrint += "Player \(p+1): "

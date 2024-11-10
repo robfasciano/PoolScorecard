@@ -154,6 +154,9 @@ struct UltraView: View {
         .onTapGesture {
             scorecard.selectIndicator(player: player, indicator: i)
         }
+        .onLongPressGesture {
+            scorecard.resetIndicator(player: player, indicator: i)
+        }
     }
     
         
