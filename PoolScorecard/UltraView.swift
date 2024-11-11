@@ -14,21 +14,18 @@ struct UltraView: View {
         
     @State private var names = ["", "", "", "", ""]
     
-    private let ultralowBalls = [1, 2, 3]
+    private let ultraLowBalls = [1, 2, 3]
     private let lowBalls = [4, 5, 6]
     private let midBalls = [7, 8, 9]
     private let hiBalls = [10, 11, 12]
-    private let ultrahiBalls = [13, 14, 15]
+    private let ultraHiBalls = [13, 14, 15]
 
     var body: some View {
         let nameSize: CGFloat = 100
-        ZStack{
-            GeometryReader {geometry in //TODO: orientation working?
+        ZStack{ //right now, if user changes orientation during game, status resets (but not for cutthroat!)
+            GeometryReader {geometry in //TODO: handle orientation better
                 //this landscape variable only gets updated when first entering the View
-                landscape = true
-                if geometry.size.height > geometry.size.width {
-                    landscape = false
-                }
+                landscape = geometry.size.height > geometry.size.width ? false : true
                 return VStack {
                     Spacer()
                     Grid() {
@@ -58,11 +55,11 @@ struct UltraView: View {
         GridRow {
             Spacer()
             newGame
-            OneBallGroup(ultralowBalls)
+            OneBallGroup(ultraLowBalls)
             OneBallGroup(lowBalls)
             OneBallGroup(midBalls)
             OneBallGroup(hiBalls)
-            OneBallGroup(ultrahiBalls)
+            OneBallGroup(ultraHiBalls)
             Spacer()
         }
     }
@@ -162,7 +159,7 @@ struct UltraView: View {
         
     func circleALevel(_ level: String) -> some View {
         Text(level)
-            .overlay(Circle().stroke(lineWidth: 7).aspectRatio(1, contentMode: .fill))
+            .overlay(Circle().stroke(lineWidth: 10).aspectRatio(1, contentMode: .fill))
             .foregroundStyle(.red)
     }
     
@@ -183,6 +180,7 @@ struct UltraView: View {
                     .minimumScaleFactor(0.001)
                     .lineLimit(2)
             }
+            .foregroundStyle(.black)
         }
     }
     

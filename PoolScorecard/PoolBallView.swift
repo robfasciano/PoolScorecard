@@ -37,7 +37,7 @@ struct PoolBallView: View {
             }
             .clipShape(Circle())
             .shadow(color: .black, radius: 5)
-//            .rotationEffect(Angle(degrees: Double.random(in: -35...35))) //this may not quite work as coded
+            .rotationEffect(Angle(degrees: Double.random(in: -35...35))) //this may not quite work as coded
     }
 }
 
