@@ -36,7 +36,6 @@ struct ChooserView: View {
                             .frame(maxWidth: frameWidth)
                         Spacer()
                     }
-//                    .animation(.default)
                     .padding()
                 }
             }

@@ -19,6 +19,8 @@ struct UltraView: View {
     private let midBalls = [7, 8, 9]
     private let hiBalls = [10, 11, 12]
     private let ultraHiBalls = [13, 14, 15]
+    
+    @State private var ballsVisible = false
 
     var body: some View {
         let nameSize: CGFloat = 100
@@ -44,6 +46,9 @@ struct UltraView: View {
                 .padding()
                 .background(feltColor)
                 .minimumScaleFactor(0.001)
+                .onAppear {
+                    ballsVisible = true
+                }
             }
         }
     }
@@ -96,8 +101,18 @@ struct UltraView: View {
         HStack(spacing: HSpacing) {
             Spacer()
                 PoolBallView(num: balls[0])
+                .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 1440))
+                .spherify()
+                .offset(x: ballsVisible ? 0 : 1800, y: 0)
+                .animation(.easeInOut(duration: ballsVisible ? 1.9 : 0)
+                    .delay(TimeInterval(Double(balls[0])/20)),value: ballsVisible)
                 if balls.count == 2 {
                     PoolBallView(num: balls[1])
+                        .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 1440))
+                        .spherify()
+                        .offset(x: ballsVisible ? 0 : 1800, y: 0)
+                        .animation(.easeInOut(duration: ballsVisible ? 1.9 : 0)
+                            .delay(TimeInterval(Double(balls[1])/20)),value: ballsVisible)
                 }
             Spacer()
             }
@@ -167,6 +182,11 @@ struct UltraView: View {
     var newGame: some View {
         Button(action: {
             scorecard.clearStatus()
+            withAnimation {
+                ballsVisible = false
+            } completion: {
+                ballsVisible = true
+            }
         })
         {
             VStack{

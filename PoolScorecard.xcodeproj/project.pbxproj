@@ -6,17 +6,34 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		1E09C1112D17827800B94FA5 /* ChooserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C1072D17827800B94FA5 /* ChooserView.swift */; };
+		1E09C1122D17827800B94FA5 /* CutthroatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C1082D17827800B94FA5 /* CutthroatView.swift */; };
+		1E09C1132D17827800B94FA5 /* PoolBallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C1092D17827800B94FA5 /* PoolBallView.swift */; };
+		1E09C1142D17827800B94FA5 /* PoolScorecardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C10A2D17827800B94FA5 /* PoolScorecardApp.swift */; };
+		1E09C1152D17827800B94FA5 /* Spherify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C10B2D17827800B94FA5 /* Spherify.swift */; };
+		1E09C1162D17827800B94FA5 /* StripeSolidView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C10C2D17827800B94FA5 /* StripeSolidView.swift */; };
+		1E09C1172D17827800B94FA5 /* UltraScorecard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C10D2D17827800B94FA5 /* UltraScorecard.swift */; };
+		1E09C1182D17827800B94FA5 /* UltraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C10E2D17827800B94FA5 /* UltraView.swift */; };
+		1E09C1192D17827800B94FA5 /* UltraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C10F2D17827800B94FA5 /* UltraViewModel.swift */; };
+		1E09C11A2D17827800B94FA5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E09C1042D17827800B94FA5 /* Preview Assets.xcassets */; };
+		1E09C11B2D17827800B94FA5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E09C1062D17827800B94FA5 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		1E09C1042D17827800B94FA5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		1E09C1062D17827800B94FA5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1E09C1072D17827800B94FA5 /* ChooserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooserView.swift; sourceTree = "<group>"; };
+		1E09C1082D17827800B94FA5 /* CutthroatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutthroatView.swift; sourceTree = "<group>"; };
+		1E09C1092D17827800B94FA5 /* PoolBallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolBallView.swift; sourceTree = "<group>"; };
+		1E09C10A2D17827800B94FA5 /* PoolScorecardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoolScorecardApp.swift; sourceTree = "<group>"; };
+		1E09C10B2D17827800B94FA5 /* Spherify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spherify.swift; sourceTree = "<group>"; };
+		1E09C10C2D17827800B94FA5 /* StripeSolidView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeSolidView.swift; sourceTree = "<group>"; };
+		1E09C10D2D17827800B94FA5 /* UltraScorecard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraScorecard.swift; sourceTree = "<group>"; };
+		1E09C10E2D17827800B94FA5 /* UltraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraView.swift; sourceTree = "<group>"; };
+		1E09C10F2D17827800B94FA5 /* UltraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraViewModel.swift; sourceTree = "<group>"; };
 		1EBAFFEF2CCEDE17002C0E30 /* PoolScorecard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PoolScorecard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		1EBAFFF12CCEDE17002C0E30 /* PoolScorecard */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PoolScorecard;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1EBAFFEC2CCEDE17002C0E30 /* Frameworks */ = {
@@ -29,10 +46,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1E09C1052D17827800B94FA5 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				1E09C1042D17827800B94FA5 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		1E09C1102D17827800B94FA5 /* PoolScorecard */ = {
+			isa = PBXGroup;
+			children = (
+				1E09C1052D17827800B94FA5 /* Preview Content */,
+				1E09C1062D17827800B94FA5 /* Assets.xcassets */,
+				1E09C10A2D17827800B94FA5 /* PoolScorecardApp.swift */,
+				1E09C1072D17827800B94FA5 /* ChooserView.swift */,
+				1E09C10C2D17827800B94FA5 /* StripeSolidView.swift */,
+				1E09C1082D17827800B94FA5 /* CutthroatView.swift */,
+				1E09C10E2D17827800B94FA5 /* UltraView.swift */,
+				1E09C10F2D17827800B94FA5 /* UltraViewModel.swift */,
+				1E09C10D2D17827800B94FA5 /* UltraScorecard.swift */,
+				1E09C1092D17827800B94FA5 /* PoolBallView.swift */,
+				1E09C10B2D17827800B94FA5 /* Spherify.swift */,
+			);
+			path = PoolScorecard;
+			sourceTree = "<group>";
+		};
 		1EBAFFE62CCEDE17002C0E30 = {
 			isa = PBXGroup;
 			children = (
-				1EBAFFF12CCEDE17002C0E30 /* PoolScorecard */,
+				1E09C1102D17827800B94FA5 /* PoolScorecard */,
 				1EBAFFF02CCEDE17002C0E30 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,9 +102,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				1EBAFFF12CCEDE17002C0E30 /* PoolScorecard */,
 			);
 			name = PoolScorecard;
 			packageProductDependencies = (
@@ -109,6 +149,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E09C11A2D17827800B94FA5 /* Preview Assets.xcassets in Resources */,
+				1E09C11B2D17827800B94FA5 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,6 +161,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1E09C1112D17827800B94FA5 /* ChooserView.swift in Sources */,
+				1E09C1122D17827800B94FA5 /* CutthroatView.swift in Sources */,
+				1E09C1132D17827800B94FA5 /* PoolBallView.swift in Sources */,
+				1E09C1142D17827800B94FA5 /* PoolScorecardApp.swift in Sources */,
+				1E09C1152D17827800B94FA5 /* Spherify.swift in Sources */,
+				1E09C1162D17827800B94FA5 /* StripeSolidView.swift in Sources */,
+				1E09C1172D17827800B94FA5 /* UltraScorecard.swift in Sources */,
+				1E09C1182D17827800B94FA5 /* UltraView.swift in Sources */,
+				1E09C1192D17827800B94FA5 /* UltraViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -19,6 +19,8 @@ struct CutthroatView: View {
         [false, false, false]  //L M H for p3
     ]
     
+    @State var ballsVisible = false
+    
     private let lowBalls = [1, 2, 3, 4, 5]
     private let midBalls = [6, 7 ,8, 9, 10]
     private let hiBalls = [11, 12, 13, 14, 15]
@@ -47,6 +49,9 @@ struct CutthroatView: View {
                 .padding()
                 .background(Constants.feltColor)
                 .minimumScaleFactor(0.001)
+                .onAppear {
+                    ballsVisible = true
+                }
             }
         }
     }
@@ -65,28 +70,29 @@ struct CutthroatView: View {
     func OneBallGroup(_ balls: [Int]) -> some View {
         GeometryReader {geometry in
             let ballWidth = geometry.size.width - 2*Constants.ballPadding
-//            if geometry.size.width > geometry.size.height {
+//            let ballWidth = 0.0
+                //            if geometry.size.width > geometry.size.height {
                 if landscape {
-                VStack(spacing: 0) {
-                    Spacer()
-                    ballRow([balls[0], balls[1]], HSpacing: Constants.iPad)
-                        .frame(width:  ballWidth + Constants.iPad)
-                    ballRow([balls[2]])
-                        .frame(width:  ballWidth / 2 )
-                    ballRow([balls[3], balls[4]], HSpacing: Constants.iPad)
-                        .frame(width:  ballWidth + Constants.iPad)
-                }
-            } else {
-                VStack {
-                    Spacer()
-                    //need id since [Int] dos not conform to identifiable
-                    ForEach(balls, id: \.self) { ball in
-                        ballRow([ball])
+                    VStack(spacing: 0) {
+                        Spacer()
+                        ballRow([balls[0], balls[1]], HSpacing: Constants.iPad)
+                            .frame(width:  ballWidth + Constants.iPad)
+                        ballRow([balls[2]])
+                            .frame(width:  ballWidth / 2 )
+                        ballRow([balls[3], balls[4]], HSpacing: Constants.iPad)
+                            .frame(width:  ballWidth + Constants.iPad)
+                    }
+                } else {
+                    VStack {
+                        Spacer()
+                        //need id since [Int] dos not conform to identifiable
+                        ForEach(balls, id: \.self) { ball in
+                            ballRow([ball])
+                        }
                     }
                 }
             }
-        }
-        .padding(0)
+                .padding(0)
     }
 
     
@@ -95,8 +101,20 @@ struct CutthroatView: View {
         HStack(spacing: HSpacing) {
             Spacer()
                 PoolBallView(num: balls[0])
+                .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 1440))
+                .spherify()
+                .offset(x: ballsVisible ? 0 : 2000, y: 0)
+
+                .animation(.easeInOut(duration: ballsVisible ? 1.8 : 0)
+                    .delay(TimeInterval(Double(balls[0])/20)),value: ballsVisible)
+
                 if balls.count == 2 {
                     PoolBallView(num: balls[1])
+                        .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 1440))
+                        .spherify()
+                        .offset(x: ballsVisible ? 0 : 2000, y: 0)
+                        .animation(.easeInOut(duration: ballsVisible ? 1.8 : 0)
+                            .delay(TimeInterval(Double(balls[1])/20)),value: ballsVisible)
                 }
             Spacer()
             }
@@ -247,18 +265,28 @@ struct CutthroatView: View {
                     results[i][j] = false
                 }
             }
+            withAnimation {
+                ballsVisible = false
+            } completion: {
+                ballsVisible = true
+            }
+
         })
         {
             VStack{
-                Image(systemName: "arrow.trianglehead.counterclockwise.rotate.90")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .multilineTextAlignment(.center)
+//                Image(systemName: "arrow.trianglehead.counterclockwise.rotate.90")
+                Image(systemName: "arrow.trianglehead.2.counterclockwise")
+                    .symbolEffect(.rotate.byLayer, options: .nonRepeating)
+                    .tint(.yellow)
+//                    .resizable()
+//                    .aspectRatio(contentMode: .fit)
+//                    .multilineTextAlignment(.center)
                 Text("New Game")
                     .font(.system(size: Constants.NewGame.maxFont))
                     .minimumScaleFactor(Constants.NewGame.minFontScale)
                     .lineLimit(2)
             }
+            .tint(.white)
         }
     }
     

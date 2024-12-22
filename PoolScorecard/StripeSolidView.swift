@@ -15,6 +15,8 @@ struct StripeSolidView: View {
     @State private var Player3 = ""
     @State private var Player4 = ""
     
+    @State private var ballsVisible = false
+    
     private let solids = 1..<8
     private let stripes = 9..<16
 
@@ -36,7 +38,9 @@ struct StripeSolidView: View {
         .padding(50)
         .background(Color(red: 0.153, green: 0.365, blue: 0.167).gradient)
         .minimumScaleFactor(0.01)
-
+        .onAppear {
+            ballsVisible = true
+        }
     }
        
     var showTopNames: some View {
@@ -58,9 +62,14 @@ struct StripeSolidView: View {
     }
         
     func show(_ balls: Range<Int>) -> some View {
-        HStack {
+        return HStack {
             ForEach(balls, id: \.self) { ball in
                 PoolBallView(num: ball)
+                    .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 720))
+                    .spherify()
+                    .offset(x: ballsVisible ? 0 : 2000, y: 0)
+                    .animation(.easeInOut(duration: ballsVisible ? 1.6 : 0)
+                        .delay(TimeInterval(Double(ball)/20)),value: ballsVisible)
             }
         }
     }
@@ -83,6 +92,13 @@ struct StripeSolidView: View {
             temp = Player3
             Player3 = Player4
             Player4 = temp
+            withAnimation() {
+                ballsVisible = false
+            } completion: {
+                ballsVisible = true
+            }
+
+
         })
         {
             VStack{
