@@ -10,9 +10,14 @@ import SwiftUI
 struct PoolBallView: View {
     let num: Int
     
-    static let halfBallColors = [.yellow, .blue, .red, .purple, .orange,
-                                 Color(red: 0.1, green: 0.348, blue: 0.051),
-                                 Color(red: 0.5, green: 0.050, blue: 0.150)]
+    static let halfBallColors = [
+        Color(red: 1.00, green: 0.601, blue: 0.013), //yellow
+        Color(red: 0.043, green: 0.268, blue: 0.278), //blue
+        Color(red: 1.00, green: 0.000, blue: 0.065), //red
+        Color(red: 0.365, green: 0.064, blue: 0.337), //purple
+        Color(red: 1.000, green: 0.300, blue: 0.150), //orange
+        Color(red: 0.100, green: 0.348, blue: 0.051), //green
+        Color(red: 0.500, green: 0.050, blue: 0.150)] //magenta
     static let ballColors = halfBallColors + [.black] + halfBallColors
     
     var body: some View {
@@ -80,29 +85,43 @@ struct PoolBallView: View {
 
 
 #Preview {
-//    HStack(spacing: 0) {
-//        PoolBallView(num: 1)
-//        PoolBallView(num: 2)
-//        PoolBallView(num: 3)
-//        PoolBallView(num: 4)
-//        PoolBallView(num: 5)
-//    }
-//    HStack(spacing: 5) {
-//        PoolBallView(num: 6)
-//        PoolBallView(num: 7)
-//        PoolBallView(num: 8)
-//        PoolBallView(num: 9)
-//        PoolBallView(num: 10)
-//    }
-//    HStack {
-//        PoolBallView(num: 11)
-//        PoolBallView(num: 12)
-//        PoolBallView(num: 13)
-//        PoolBallView(num: 14)
-//        PoolBallView(num: 15)
-//
-//    }
-    PoolBallView(num: 8)
-        .spherify()
+    HStack(spacing: 3) {
+        PoolBallView(num: 1)
+            .spherify()
+        PoolBallView(num: 2)
+            .spherify()
+        PoolBallView(num: 3)
+            .spherify()
+        PoolBallView(num: 4)
+            .spherify()
+        PoolBallView(num: 5)
+            .spherify()
+    }
+    HStack(spacing: 3) {
+        PoolBallView(num: 6)
+            .spherify()
+        PoolBallView(num: 7)
+            .spherify()
+        PoolBallView(num: 8)
+            .spherify()
+        PoolBallView(num: 9)
+            .spherify()
+        PoolBallView(num: 10)
+            .spherify()
+    }
+    HStack(spacing: 3) {
+        PoolBallView(num: 11)
+            .spherify()
+        PoolBallView(num: 12)
+            .spherify()
+        PoolBallView(num: 13)
+            .spherify()
+        PoolBallView(num: 14)
+            .spherify()
+        PoolBallView(num: 15)
+            .spherify()
+    }
+//    PoolBallView(num: 8)
+//        .spherify()
 
 }

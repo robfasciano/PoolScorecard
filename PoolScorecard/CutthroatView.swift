@@ -43,7 +43,12 @@ struct CutthroatView: View {
                     }
                     Spacer()
                 }
-                .font(.system(size: Constants.Names.maxFont))
+                
+                .font(Font.custom("Red Hat Display", size: Constants.Names.maxFont))
+                .fontWeight(.bold)
+
+                
+//                .font(.system(size: Constants.Names.maxFont))
                 .textFieldStyle(.automatic)
                 .multilineTextAlignment(.center)
                 .padding()
@@ -69,9 +74,7 @@ struct CutthroatView: View {
     
     func OneBallGroup(_ balls: [Int]) -> some View {
         GeometryReader {geometry in
-            let ballWidth = geometry.size.width - 2*Constants.ballPadding
-//            let ballWidth = 0.0
-                //            if geometry.size.width > geometry.size.height {
+            let ballWidth = max(0, geometry.size.width - 2*Constants.ballPadding)
                 if landscape {
                     VStack(spacing: 0) {
                         Spacer()
@@ -103,7 +106,7 @@ struct CutthroatView: View {
                 PoolBallView(num: balls[0])
                 .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 1440))
                 .spherify()
-                .offset(x: ballsVisible ? 0 : 2000, y: 0)
+                .offset(x: ballsVisible ? 0 : 1000, y: 0)
 
                 .animation(.easeInOut(duration: ballsVisible ? 1.8 : 0)
                     .delay(TimeInterval(Double(balls[0])/20)),value: ballsVisible)
@@ -112,7 +115,7 @@ struct CutthroatView: View {
                     PoolBallView(num: balls[1])
                         .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 1440))
                         .spherify()
-                        .offset(x: ballsVisible ? 0 : 2000, y: 0)
+                        .offset(x: ballsVisible ? 0 : 1000, y: 0)
                         .animation(.easeInOut(duration: ballsVisible ? 1.8 : 0)
                             .delay(TimeInterval(Double(balls[1])/20)),value: ballsVisible)
                 }
@@ -125,10 +128,9 @@ struct CutthroatView: View {
        GridRow {
            Spacer()
            TextField("Player \(which+1)", text: $names[which]).frame(maxHeight: height)
-               
-           statButton(which, "L").frame(maxHeight: height)
-           statButton(which, "M").frame(maxHeight: height)
-           statButton(which, "H").frame(maxHeight: height)
+               statButton(which, "L").frame(maxHeight: height)
+               statButton(which, "M").frame(maxHeight: height)
+               statButton(which, "H").frame(maxHeight: height)
            Spacer()
        }.minimumScaleFactor(0.001)
    }
@@ -152,6 +154,7 @@ struct CutthroatView: View {
         return ZStack {
             if results[player][i] {
                 Text(level)
+                    .fontWeight(.medium)
                 Text("❌").opacity(0.7)
                     .transition(.asymmetric(insertion: .scale.animation(.bouncy), removal: .identity))
             } else {
@@ -162,6 +165,8 @@ struct CutthroatView: View {
                     circleALevel(level)
                 } else {
                     Text(level)
+                        .fontWeight(.medium)
+
                 }
             }
         }
@@ -276,13 +281,18 @@ struct CutthroatView: View {
             VStack{
 //                Image(systemName: "arrow.trianglehead.counterclockwise.rotate.90")
                 Image(systemName: "arrow.trianglehead.2.counterclockwise")
-                    .symbolEffect(.rotate.byLayer, options: .nonRepeating)
+//                    .symbolEffect(.rotate.byLayer, options: .nonRepeating)
                     .tint(.yellow)
+                    .rotationEffect(Angle(degrees: ballsVisible ? 360 : 0))
+                    .animation(.easeInOut(duration: ballsVisible ? 0 : 1.0), value: ballsVisible)
+
 //                    .resizable()
 //                    .aspectRatio(contentMode: .fit)
 //                    .multilineTextAlignment(.center)
                 Text("New Game")
-                    .font(.system(size: Constants.NewGame.maxFont))
+                    .font(Font.custom("Red Hat Display", size: 100))
+                    .fontWeight(.bold)
+//                    .font(.system(size: Constants.NewGame.maxFont))
                     .minimumScaleFactor(Constants.NewGame.minFontScale)
                     .lineLimit(2)
             }
