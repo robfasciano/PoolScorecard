@@ -10,10 +10,13 @@ import SwiftUI
 struct StripeSolidView: View {
     let players: Int
     
-    @State private var Player1 = ""
-    @State private var Player2 = ""
-    @State private var Player3 = ""
-    @State private var Player4 = ""
+//    @State private var Player1 = ""
+//    @State private var Player2 = ""
+//    @State private var Player3 = ""
+//    @State private var Player4 = ""
+    @State private var Players = ["", "", "", ""]
+    @State private var score = [0, 0, 0, 0]
+
     
     @State private var ballsVisible = false
     @Environment(\.dismiss) var dismiss
@@ -25,16 +28,11 @@ struct StripeSolidView: View {
         
         let nameSize: CGFloat = 100
         VStack{
-            Text("⬅️Back")
-                .font(.title)
-                .fontWeight(.black)
-                .onTapGesture(perform: {
-                    dismiss()
-                })
-
-            showTopNames
+            BackButton()
+                .onTapGesture(perform: { dismiss() })
+            showNames(LeftmostName: 1)
             show(solids)
-            showBottomNames
+            showNames(LeftmostName: 2)
             show(stripes)
             Spacer()
             showBottomButtons
@@ -50,20 +48,55 @@ struct StripeSolidView: View {
         }
     }
        
-    var showTopNames: some View {
-        HStack {
-            TextField("Player 1", text: $Player1)
+    func showNames(LeftmostName: Int) -> some View {
+        let which = LeftmostName - 1
+        return HStack {
+            TextField("Player \(which+1)", text: $Players[which])
+                .overlay(
+                    Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
+                    .rotationEffect(Angle(degrees: 20))
+                    .overlay(
+                        Text("\(score[which])").offset(y: 40)
+                            .fontWeight(.black)
+                            .scaleEffect(0.6)
+                            .shadow(color: .white, radius: 5)
+                    )
+                    .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
+                    .onTapGesture(count: 2) {
+                        score[which] += 1
+                    }
+                        .onLongPressGesture {
+                            score[which] -= score[which] > 0 ? 1 : 0
+                        }
+                )
             if players == 4 {
-                TextField("Player 3", text: $Player3)
+                TextField("Player \(which+3)", text: $Players[which+2])
+                    .overlay(
+                        Text(score[which+2] >= (score.max() ?? 0) && score[which+2] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which+2])
+                        .rotationEffect(Angle(degrees: 20))
+                        .overlay(
+                            Text("\(score[which+2])").offset(y: 40)
+                                .fontWeight(.black)
+                                .scaleEffect(0.6)
+                                .shadow(color: .white, radius: 5)
+                        )
+                        .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
+                        .onTapGesture(count: 2) {
+                            score[which+2] += 1
+                        }
+                            .onLongPressGesture {
+                                score[which+2] -= score[which+2] > 0 ? 1 : 0
+                            }
+                    )
             }
         }
     }
     
     var showBottomNames: some View{
         HStack {
-            TextField("Player 2", text: $Player2)
+            TextField("Player 2", text: $Players[1])
             if players == 4 {
-                TextField("Player 4", text: $Player4)
+                TextField("Player 4", text: $Players[3])
             }
         }
     }
@@ -93,19 +126,23 @@ struct StripeSolidView: View {
     
     var swapBalls: some View {
         Button(action: {
-            var temp = Player1
-            Player1 = Player2
-            Player2 = temp
-            temp = Player3
-            Player3 = Player4
-            Player4 = temp
+            var temp = Players[0]
+            var tempScore = score[0]
+            Players[0] = Players[1]
+            score[0] = score[1]
+            Players[1] = temp
+            score[1] = tempScore
+            temp = Players[2]
+            tempScore = score[2]
+            Players[2] = Players[3]
+            score[2] = score[3]
+            Players[3] = temp
+            score[3] = tempScore
             withAnimation() {
                 ballsVisible = false
             } completion: {
                 ballsVisible = true
             }
-
-
         })
         {
             VStack{
@@ -121,11 +158,17 @@ struct StripeSolidView: View {
 
     var swapTeams: some View {
         Button(action: {
-            let playerArray = [Player1, Player2, Player3, Player4].shuffled()
-            Player1 = playerArray[0]
-            Player2 = playerArray[1]
-            Player3 = playerArray[2]
-            Player4 = playerArray[3]
+            let tempPlayers = Players.shuffled()
+            //adjust scores
+            //TODO: fix this.  it currently does not work if there are duplicte names (including blanks)
+            let tempScoreArray = score
+            for i in 0...3 {
+                score[i] = tempScoreArray[Players.firstIndex(of: tempPlayers[i])!]
+            }
+//            print(tempScoreArray)
+//            print(score)
+            //adjust names
+            Players = tempPlayers
         })
         {
             VStack{

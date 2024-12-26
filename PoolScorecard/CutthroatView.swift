@@ -21,6 +21,7 @@ struct CutthroatView: View {
         [false, false, false]  //L M H for p3
     ]
     
+    
     @State var ballsVisible = false
     @Environment(\.dismiss) var dismiss
 
@@ -38,13 +39,8 @@ struct CutthroatView: View {
                     landscape = false
                 }
                 return VStack {
-                    Text("⬅️Back")
-                        .font(.title)
-                        .fontWeight(.black)
-                        .onTapGesture(perform: {
-                            dismiss()
-                        })
-
+                    BackButton()
+                        .onTapGesture(perform: { dismiss() })
                     Grid() {
                         ballGroups
                         nameRow(0, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
@@ -137,21 +133,22 @@ struct CutthroatView: View {
                 .foregroundStyle(PoolScorecardApp.Constants.textColor1)
 
                 .overlay(
-                    Text(score[which] > 0 ? "👑" : "")
+                    Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
                     .rotationEffect(Angle(degrees: 20))
                     .overlay(
                         Text("\(score[which])").offset(y: 40)
-                            .scaleEffect(0.7)
+                            .fontWeight(.black)
+                            .scaleEffect(0.6)
+                            .shadow(color: .white, radius: 5)
                     )
                     .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
-
+                    .onTapGesture(count: 2) {
+                        score[which] += 1
+                    }
+                        .onLongPressGesture {
+                            score[which] -= score[which] > 0 ? 1 : 0
+                        }
                 )
-//                .onDrag {
-//                   
-//                } preview: {
-//                    Text("Player \(which+1)")
-//                }
-
             statButton(which, "L").frame(maxHeight: height)
             statButton(which, "M").frame(maxHeight: height)
             statButton(which, "H").frame(maxHeight: height)

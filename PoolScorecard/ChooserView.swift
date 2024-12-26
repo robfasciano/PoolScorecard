@@ -117,35 +117,6 @@ struct ChooserView: View {
                 StripeSolidView(players: numPlayers)
             }
     }
-    
-//    func stripeSolidNav(numPlayers: Int) -> some View {
-//        return PoolBallView(num: numPlayers).spherify()
-//            .offset(x: selectorOnScreen[numPlayers-2] ? Constants.offset : 800)
-//            .onTapGesture {
-//                withAnimation(.linear) {
-//                    cueOnScreen[numPlayers-2] = true
-//                } completion: {
-//                    withAnimation(.easeOut) {
-//                        selectorOnScreen[numPlayers-2] = false
-//                    } completion: {
-//                        if numPlayers == 2 {
-//                            showing2PSheet.toggle()
-//                        } else {
-//                            showing4PSheet.toggle()
-//                        }
-//                        cueOnScreen[numPlayers-2] = false
-//                        selectorOnScreen[numPlayers-2] = true
-//                    }
-//                }
-//            }
-//            .fullScreenCover(isPresented: $showing2PSheet) {
-//                StripeSolidView(players: numPlayers)
-//            }
-//            .fullScreenCover(isPresented: $showing4PSheet) {
-//                StripeSolidView(players: numPlayers)
-//            }
-//    }
-
         
     func cutthroatNav() -> some View {
         let numPlayers = 3

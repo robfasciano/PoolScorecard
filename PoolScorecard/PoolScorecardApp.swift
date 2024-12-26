@@ -25,6 +25,7 @@ struct PoolScorecardApp: App {
         static let XCharacter = "❌"
 //        static let XCharacter = "☠️"
         static let fontName = "Red Hat Display"
+        static let hats = ["🧢", "🎩", "🎓", "👒", "⛑️"]
     }
 }
 

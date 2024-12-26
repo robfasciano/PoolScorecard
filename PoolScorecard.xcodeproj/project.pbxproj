@@ -21,6 +21,7 @@
 		1E09C11E2D18A06A00B94FA5 /* RedHatDisplay-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1E09C11C2D18A06A00B94FA5 /* RedHatDisplay-Italic-VariableFont_wght.ttf */; };
 		1E09C11F2D18A06A00B94FA5 /* RedHatDisplay-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1E09C11D2D18A06A00B94FA5 /* RedHatDisplay-VariableFont_wght.ttf */; };
 		1EA00B6F2D1AFD8B00073BFF /* NewGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA00B6E2D1AFD8B00073BFF /* NewGameView.swift */; };
+		1EA00B712D1DE13A00073BFF /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA00B702D1DE13A00073BFF /* BackButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		1E09C11D2D18A06A00B94FA5 /* RedHatDisplay-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "RedHatDisplay-VariableFont_wght.ttf"; path = "Fonts/RedHatDisplay-VariableFont_wght.ttf"; sourceTree = SOURCE_ROOT; };
 		1E09C1212D18A7A800B94FA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1EA00B6E2D1AFD8B00073BFF /* NewGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameView.swift; sourceTree = "<group>"; };
+		1EA00B702D1DE13A00073BFF /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		1EBAFFEF2CCEDE17002C0E30 /* PoolScorecard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PoolScorecard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -73,6 +75,7 @@
 				1E09C1082D17827800B94FA5 /* CutthroatView.swift */,
 				1EA00B6E2D1AFD8B00073BFF /* NewGameView.swift */,
 				1E09C10E2D17827800B94FA5 /* UltraView.swift */,
+				1EA00B702D1DE13A00073BFF /* BackButton.swift */,
 				1E09C10F2D17827800B94FA5 /* UltraViewModel.swift */,
 				1E09C10D2D17827800B94FA5 /* UltraScorecard.swift */,
 				1E09C1092D17827800B94FA5 /* PoolBallView.swift */,
@@ -191,6 +194,7 @@
 				1E09C1162D17827800B94FA5 /* StripeSolidView.swift in Sources */,
 				1E09C1172D17827800B94FA5 /* UltraScorecard.swift in Sources */,
 				1E09C1182D17827800B94FA5 /* UltraView.swift in Sources */,
+				1EA00B712D1DE13A00073BFF /* BackButton.swift in Sources */,
 				1E09C1192D17827800B94FA5 /* UltraViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

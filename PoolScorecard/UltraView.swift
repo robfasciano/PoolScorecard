@@ -11,6 +11,8 @@ struct UltraView: View {
     @ObservedObject var scorecard: ultraViewModel
             
     @State private var names = ["", "", "", "", ""]
+    @State private var score = [0, 0, 0, 0, 0]
+
     
     private let ultraLowBalls = [1, 2, 3]
     private let lowBalls = [4, 5, 6]
@@ -28,17 +30,10 @@ struct UltraView: View {
                 //this landscape variable only gets updated when first entering the View
                 landscape = geometry.size.height > geometry.size.width ? false : true
                 return VStack {
-//                    Spacer()
-//                    Text("hey")
-//                    Button("⬅️Back") {
-//                        dismiss()
-//                    }
-                    Text("⬅️Back")
-                        .font(.title)
-                        .fontWeight(.black)
-                        .onTapGesture(perform: {
-                            dismiss()
-                        })
+                    BackButton()
+                    .onTapGesture(perform: {
+                        dismiss()
+                    })
 //                        .font(Font.custom(PoolScorecardApp.Constants.fontName, size: Constants.Names.maxFont))
                     Grid() {
                         ballGroups
@@ -50,11 +45,7 @@ struct UltraView: View {
                     }
                     Spacer()
                 }
-                
-
                 .font(.system(size: nameSize))
-                
-                
                 .textFieldStyle(.automatic)
                 .multilineTextAlignment(.center)
                 .padding()
@@ -138,6 +129,23 @@ struct UltraView: View {
        GridRow {
            Spacer()
            TextField("Player \(which+1)", text: $names[which]).frame(maxHeight: height)
+               .overlay(
+                   Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
+                   .rotationEffect(Angle(degrees: 20))
+                   .overlay(
+                       Text("\(score[which])").offset(y: 40)
+                           .fontWeight(.black)
+                           .scaleEffect(0.6)
+                           .shadow(color: .white, radius: 5)
+                   )
+                   .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
+                   .onTapGesture(count: 2) {
+                       score[which] += 1
+                   }
+                       .onLongPressGesture {
+                           score[which] -= score[which] > 0 ? 1 : 0
+                       }
+               )
                
            statButton(which, indicators[0]).frame(maxHeight: height)
            statButton(which, indicators[1]).frame(maxHeight: height)
