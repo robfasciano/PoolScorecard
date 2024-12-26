@@ -16,6 +16,7 @@ struct StripeSolidView: View {
     @State private var Player4 = ""
     
     @State private var ballsVisible = false
+    @Environment(\.dismiss) var dismiss
     
     private let solids = 1..<8
     private let stripes = 9..<16
@@ -24,7 +25,13 @@ struct StripeSolidView: View {
         
         let nameSize: CGFloat = 100
         VStack{
-            Spacer()
+            Text("⬅️Back")
+                .font(.title)
+                .fontWeight(.black)
+                .onTapGesture(perform: {
+                    dismiss()
+                })
+
             showTopNames
             show(solids)
             showBottomNames

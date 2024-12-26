@@ -22,6 +22,8 @@ struct CutthroatView: View {
     ]
     
     @State var ballsVisible = false
+    @Environment(\.dismiss) var dismiss
+
     
     private let lowBalls = [1, 2, 3, 4, 5]
     private let midBalls = [6, 7 ,8, 9, 10]
@@ -36,7 +38,13 @@ struct CutthroatView: View {
                     landscape = false
                 }
                 return VStack {
-                    Spacer()
+                    Text("⬅️Back")
+                        .font(.title)
+                        .fontWeight(.black)
+                        .onTapGesture(perform: {
+                            dismiss()
+                        })
+
                     Grid() {
                         ballGroups
                         nameRow(0, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
