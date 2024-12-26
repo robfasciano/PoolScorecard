@@ -13,6 +13,8 @@ struct CutthroatView: View {
     
     
     @State private var names = ["", "", ""]
+//    @State private var score = [1,2,3]
+    @State private var score = [0, 0, 0]
     @State private var results = [
         [false, false, false], //L M H for p1
         [false, false, false], //L M H for p2
@@ -44,15 +46,10 @@ struct CutthroatView: View {
                     Spacer()
                 }
                 
-                .font(Font.custom("Red Hat Display", size: Constants.Names.maxFont))
-                .fontWeight(.bold)
-
-                
-//                .font(.system(size: Constants.Names.maxFont))
+                .font(Font.custom(PoolScorecardApp.Constants.fontName, size: Constants.Names.maxFont))
                 .textFieldStyle(.automatic)
-                .multilineTextAlignment(.center)
                 .padding()
-                .background(Constants.feltColor)
+                .background(PoolScorecardApp.Constants.feltColor)
                 .minimumScaleFactor(0.001)
                 .onAppear {
                     ballsVisible = true
@@ -125,15 +122,34 @@ struct CutthroatView: View {
     
   
     func nameRow(_ which: Int, height: CGFloat) -> some View {
-       GridRow {
-           Spacer()
-           TextField("Player \(which+1)", text: $names[which]).frame(maxHeight: height)
-               statButton(which, "L").frame(maxHeight: height)
-               statButton(which, "M").frame(maxHeight: height)
-               statButton(which, "H").frame(maxHeight: height)
-           Spacer()
-       }.minimumScaleFactor(0.001)
-   }
+        GridRow {
+            Spacer()
+            TextField("Player \(which+1)", text: $names[which]).frame(maxHeight: height)
+                .fontWeight(.bold)
+                .foregroundStyle(PoolScorecardApp.Constants.textColor1)
+
+                .overlay(
+                    Text(score[which] > 0 ? "👑" : "")
+                    .rotationEffect(Angle(degrees: 20))
+                    .overlay(
+                        Text("\(score[which])").offset(y: 40)
+                            .scaleEffect(0.7)
+                    )
+                    .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
+
+                )
+//                .onDrag {
+//                   
+//                } preview: {
+//                    Text("Player \(which+1)")
+//                }
+
+            statButton(which, "L").frame(maxHeight: height)
+            statButton(which, "M").frame(maxHeight: height)
+            statButton(which, "H").frame(maxHeight: height)
+            Spacer()
+        }.minimumScaleFactor(0.001)
+    }
 
         
      func statButton(_ player: Int, _ level: String) -> some View {
@@ -155,7 +171,7 @@ struct CutthroatView: View {
             if results[player][i] {
                 Text(level)
                     .fontWeight(.medium)
-                Text("❌").opacity(0.7)
+                Text(PoolScorecardApp.Constants.XCharacter).opacity(0.7)
                     .transition(.asymmetric(insertion: .scale.animation(.bouncy), removal: .identity))
             } else {
                 if results[otherPlayers[0]][i] && results[otherPlayers[1]][i] {
@@ -166,10 +182,14 @@ struct CutthroatView: View {
                 } else {
                     Text(level)
                         .fontWeight(.medium)
-
                 }
             }
         }
+        .font(Font.custom(PoolScorecardApp.Constants.fontName, size: Constants.levelText.maxFont))
+        .fontWeight(.bold)
+        .minimumScaleFactor(Constants.levelText.minFontScale)
+        .foregroundStyle(PoolScorecardApp.Constants.textColor1)
+
         .onTapGesture {
             if results[otherPlayers[0]][i] && results[otherPlayers[1]][i] {
                 return
@@ -263,7 +283,7 @@ struct CutthroatView: View {
     }
     
     
-    var newGame: some View {
+     var newGame: some View {
         Button(action: {
             for i in 0..<results.count {
                 for j in 0..<results[0].count {
@@ -278,37 +298,13 @@ struct CutthroatView: View {
 
         })
         {
-            VStack{
-//                Image(systemName: "arrow.trianglehead.counterclockwise.rotate.90")
-                Image(systemName: "arrow.trianglehead.2.counterclockwise")
-//                    .symbolEffect(.rotate.byLayer, options: .nonRepeating)
-                    .tint(.yellow)
-                    .rotationEffect(Angle(degrees: ballsVisible ? 360 : 0))
-                    .animation(.easeInOut(duration: ballsVisible ? 0 : 1.0), value: ballsVisible)
-
-//                    .resizable()
-//                    .aspectRatio(contentMode: .fit)
-//                    .multilineTextAlignment(.center)
-                Text("New Game")
-                    .font(Font.custom("Red Hat Display", size: 100))
-                    .fontWeight(.bold)
-//                    .font(.system(size: Constants.NewGame.maxFont))
-                    .minimumScaleFactor(Constants.NewGame.minFontScale)
-                    .lineLimit(2)
-            }
-            .tint(.white)
+            NewGameView(ballsVisible: ballsVisible)
         }
     }
     
     private struct Constants {
-        static let feltColor = Color(red: 0.153, green: 0.365, blue: 0.167).gradient
         static let ballPadding = 5.0
         static let iPad = 5.0 //padding between ball (HStack) when 2 in row
-        struct NewGame {
-            static let maxFont: CGFloat = 80
-            static let minFont: CGFloat = 1
-            static let minFontScale: CGFloat = minFont / maxFont
-        }
         struct Names {
             static let maxFont: CGFloat = 150
             struct screenRatio {
@@ -316,8 +312,12 @@ struct CutthroatView: View {
                 static let portrait: CGFloat = 1 / 2.0
             }
         }
+        struct levelText {
+            static let maxFont: CGFloat = 200
+            static let minFont: CGFloat = 15
+            static let minFontScale: CGFloat = minFont / maxFont
+        }
     }
-
 }
 
 

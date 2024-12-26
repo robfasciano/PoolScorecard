@@ -9,9 +9,7 @@ import SwiftUI
 
 struct UltraView: View {
     @ObservedObject var scorecard: ultraViewModel
-    
-    let feltColor = Color(red: 0.153, green: 0.365, blue: 0.167).gradient
-        
+            
     @State private var names = ["", "", "", "", ""]
     
     private let ultraLowBalls = [1, 2, 3]
@@ -21,6 +19,7 @@ struct UltraView: View {
     private let ultraHiBalls = [13, 14, 15]
     
     @State private var ballsVisible = false
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         let nameSize: CGFloat = 100
@@ -29,7 +28,18 @@ struct UltraView: View {
                 //this landscape variable only gets updated when first entering the View
                 landscape = geometry.size.height > geometry.size.width ? false : true
                 return VStack {
-                    Spacer()
+//                    Spacer()
+//                    Text("hey")
+//                    Button("⬅️Back") {
+//                        dismiss()
+//                    }
+                    Text("⬅️Back")
+                        .font(.title)
+                        .fontWeight(.black)
+                        .onTapGesture(perform: {
+                            dismiss()
+                        })
+//                        .font(Font.custom(PoolScorecardApp.Constants.fontName, size: Constants.Names.maxFont))
                     Grid() {
                         ballGroups
                         nameRow(0, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
@@ -40,11 +50,15 @@ struct UltraView: View {
                     }
                     Spacer()
                 }
+                
+
                 .font(.system(size: nameSize))
+                
+                
                 .textFieldStyle(.automatic)
                 .multilineTextAlignment(.center)
                 .padding()
-                .background(feltColor)
+                .background(PoolScorecardApp.Constants.feltColor)
                 .minimumScaleFactor(0.001)
                 .onAppear {
                     ballsVisible = true
@@ -153,10 +167,10 @@ struct UltraView: View {
             switch scorecard.standings(player, i) {
             case ultraScorcard.status.checkedByClick:
                 Text(level)
-                Text("❌").opacity(0.9)
+                Text(PoolScorecardApp.Constants.XCharacter).opacity(0.9)
             case ultraScorcard.status.checkedByCircle:
                 Text(level)
-                Text("❌").opacity(0.3)
+                Text(PoolScorecardApp.Constants.XCharacter).opacity(0.3)
             case ultraScorcard.status.circled:
                 circleALevel(level)
             case ultraScorcard.status.unknown:
@@ -189,21 +203,15 @@ struct UltraView: View {
             }
         })
         {
-            VStack{
-                Image(systemName: "arrow.trianglehead.counterclockwise.rotate.90")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .font(.system(size: 80))
-                    .minimumScaleFactor(0.001)
-                Text("New Game")
-                    .font(.system(size: 40))
-                    .minimumScaleFactor(0.001)
-                    .lineLimit(2)
-            }
-            .foregroundStyle(.black)
+            NewGameView(ballsVisible: ballsVisible)
         }
     }
     
+    struct Constants {
+        static let ballPadding = 5.0
+        static let iPad = 5.0 //padding between ball (HStack) when 2 in row
+    }
+
 }
 
 

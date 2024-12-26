@@ -18,15 +18,15 @@ struct PoolBallView: View {
         Color(red: 1.000, green: 0.300, blue: 0.150), //orange
         Color(red: 0.100, green: 0.348, blue: 0.051), //green
         Color(red: 0.500, green: 0.050, blue: 0.150)] //magenta
-    static let ballColors = halfBallColors + [.black] + halfBallColors
+    static let ballColors = [.white] + halfBallColors + [.black] + halfBallColors
     
     var body: some View {
         Rectangle()
-            .fill(num<9 ? PoolBallView.ballColors[num-1] : .white)
+            .fill(num<9 ? PoolBallView.ballColors[num] : .white)
             .aspectRatio(1, contentMode: .fit)
             .overlay {
                 Rectangle()
-                    .fill(PoolBallView.ballColors[num-1])
+                    .fill(PoolBallView.ballColors[num])
                     .aspectRatio(2, contentMode: .fit)
                 
                     .overlay {
@@ -34,7 +34,7 @@ struct PoolBallView: View {
                             .fill(.white)
                             .aspectRatio(0.75, contentMode: .fit)
                             .overlay {
-                                Text(String(num))
+                                Text(num > 0 ? String(num) : "")
                                     .font(.system(size: 200))
                                     .fontWeight(.bold)
                                     .minimumScaleFactor(0.001)
@@ -86,7 +86,7 @@ struct PoolBallView: View {
 
 #Preview {
     HStack(spacing: 3) {
-        PoolBallView(num: 1)
+        PoolBallView(num: 0)
             .spherify()
         PoolBallView(num: 2)
             .spherify()

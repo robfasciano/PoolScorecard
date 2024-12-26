@@ -36,7 +36,7 @@ struct StripeSolidView: View {
         .textFieldStyle(.automatic)
         .multilineTextAlignment(.center)
         .padding(50)
-        .background(Color(red: 0.153, green: 0.365, blue: 0.167).gradient)
+        .background(PoolScorecardApp.Constants.feltColor)
         .minimumScaleFactor(0.01)
         .onAppear {
             ballsVisible = true

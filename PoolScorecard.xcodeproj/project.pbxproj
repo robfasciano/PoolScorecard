@@ -20,6 +20,7 @@
 		1E09C11B2D17827800B94FA5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E09C1062D17827800B94FA5 /* Assets.xcassets */; };
 		1E09C11E2D18A06A00B94FA5 /* RedHatDisplay-Italic-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1E09C11C2D18A06A00B94FA5 /* RedHatDisplay-Italic-VariableFont_wght.ttf */; };
 		1E09C11F2D18A06A00B94FA5 /* RedHatDisplay-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1E09C11D2D18A06A00B94FA5 /* RedHatDisplay-VariableFont_wght.ttf */; };
+		1EA00B6F2D1AFD8B00073BFF /* NewGameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA00B6E2D1AFD8B00073BFF /* NewGameView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		1E09C11C2D18A06A00B94FA5 /* RedHatDisplay-Italic-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "RedHatDisplay-Italic-VariableFont_wght.ttf"; sourceTree = "<group>"; };
 		1E09C11D2D18A06A00B94FA5 /* RedHatDisplay-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "RedHatDisplay-VariableFont_wght.ttf"; path = "Fonts/RedHatDisplay-VariableFont_wght.ttf"; sourceTree = SOURCE_ROOT; };
 		1E09C1212D18A7A800B94FA5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1EA00B6E2D1AFD8B00073BFF /* NewGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGameView.swift; sourceTree = "<group>"; };
 		1EBAFFEF2CCEDE17002C0E30 /* PoolScorecard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PoolScorecard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -69,6 +71,7 @@
 				1E09C1072D17827800B94FA5 /* ChooserView.swift */,
 				1E09C10C2D17827800B94FA5 /* StripeSolidView.swift */,
 				1E09C1082D17827800B94FA5 /* CutthroatView.swift */,
+				1EA00B6E2D1AFD8B00073BFF /* NewGameView.swift */,
 				1E09C10E2D17827800B94FA5 /* UltraView.swift */,
 				1E09C10F2D17827800B94FA5 /* UltraViewModel.swift */,
 				1E09C10D2D17827800B94FA5 /* UltraScorecard.swift */,
@@ -184,6 +187,7 @@
 				1E09C1132D17827800B94FA5 /* PoolBallView.swift in Sources */,
 				1E09C1142D17827800B94FA5 /* PoolScorecardApp.swift in Sources */,
 				1E09C1152D17827800B94FA5 /* Spherify.swift in Sources */,
+				1EA00B6F2D1AFD8B00073BFF /* NewGameView.swift in Sources */,
 				1E09C1162D17827800B94FA5 /* StripeSolidView.swift in Sources */,
 				1E09C1172D17827800B94FA5 /* UltraScorecard.swift in Sources */,
 				1E09C1182D17827800B94FA5 /* UltraView.swift in Sources */,
