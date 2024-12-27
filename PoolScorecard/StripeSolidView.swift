@@ -158,17 +158,14 @@ struct StripeSolidView: View {
 
     var swapTeams: some View {
         Button(action: {
-            let tempPlayers = Players.shuffled()
-            //adjust scores
-            //TODO: fix this.  it currently does not work if there are duplicte names (including blanks)
-            let tempScoreArray = score
-            for i in 0...3 {
-                score[i] = tempScoreArray[Players.firstIndex(of: tempPlayers[i])!]
+            let tempPlayers = Players
+            let tempScores = score
+            let shuffleOrder = [0, 1, 2, 3].shuffled()
+
+            for i in 0...Players.count - 1 {
+                Players[i] = tempPlayers[shuffleOrder[i]]
+                score[i] = tempScores[shuffleOrder[i]]
             }
-//            print(tempScoreArray)
-//            print(score)
-            //adjust names
-            Players = tempPlayers
         })
         {
             VStack{
@@ -178,9 +175,7 @@ struct StripeSolidView: View {
                 Text("Change Teams")
                     .font(.system(size: 40))
                     .minimumScaleFactor(0.01)
-
             }
-
         }
     }
 
