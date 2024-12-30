@@ -10,7 +10,7 @@ import SwiftUI
 var landscape: Bool = true
 
 struct CutthroatView: View {
-    
+    let players: Int
     
     @State private var names = ["", "", ""]
 //    @State private var score = [1,2,3]
@@ -21,6 +21,7 @@ struct CutthroatView: View {
         [false, false, false]  //L M H for p3
     ]
     
+    @State private var editingText = false
     
     @State var ballsVisible = false
     @Environment(\.dismiss) var dismiss
@@ -42,9 +43,17 @@ struct CutthroatView: View {
                     BackButton()
                         .onTapGesture(perform: { dismiss() })
                     Grid() {
-                        ballGroups
+                        if !editingText {
+                            ballGroups
+                        }
                         nameRow(0, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
+                        if editingText {
+                            Spacer()
+                        }
                         nameRow(1, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
+                        if editingText {
+                            Spacer()
+                        }
                         nameRow(2, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
                     }
                     Spacer()
@@ -71,6 +80,8 @@ struct CutthroatView: View {
             OneBallGroup(hiBalls)
             Spacer()
         }
+
+
     }
     
     func OneBallGroup(_ balls: [Int]) -> some View {
@@ -128,10 +139,18 @@ struct CutthroatView: View {
     func nameRow(_ which: Int, height: CGFloat) -> some View {
         GridRow {
             Spacer()
-            TextField("Player \(which+1)", text: $names[which]).frame(maxHeight: height)
-                .fontWeight(.bold)
+            TextField("Player \(which+1)",
+                      text: $names[which],
+                      onEditingChanged: { changed in
+                if changed {
+                    editingText = true
+                } else {
+                    editingText = false
+                }
+            })
+            .frame(maxHeight: height)
+            .fontWeight(.bold)
                 .foregroundStyle(PoolScorecardApp.Constants.textColor1)
-
                 .overlay(
                     Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
                     .rotationEffect(Angle(degrees: 20))
@@ -311,7 +330,7 @@ struct CutthroatView: View {
         static let ballPadding = 5.0
         static let iPad = 5.0 //padding between ball (HStack) when 2 in row
         struct Names {
-            static let maxFont: CGFloat = 150
+            static let maxFont: CGFloat = 120
             struct screenRatio {
                 static let landscape: CGFloat = 1 / 1.8
                 static let portrait: CGFloat = 1 / 2.0
@@ -327,5 +346,5 @@ struct CutthroatView: View {
 
 
 #Preview {
-    CutthroatView()
+    CutthroatView(players: 3)
 }

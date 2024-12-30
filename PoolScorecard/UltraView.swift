@@ -12,6 +12,7 @@ struct UltraView: View {
             
     @State private var names = ["", "", "", "", ""]
     @State private var score = [0, 0, 0, 0, 0]
+    @State private var editingText = false
 
     
     private let ultraLowBalls = [1, 2, 3]
@@ -34,9 +35,10 @@ struct UltraView: View {
                     .onTapGesture(perform: {
                         dismiss()
                     })
-//                        .font(Font.custom(PoolScorecardApp.Constants.fontName, size: Constants.Names.maxFont))
                     Grid() {
-                        ballGroups
+                        if !editingText {
+                            ballGroups
+                        }
                         nameRow(0, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
                         nameRow(1, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
                         nameRow(2, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
@@ -128,7 +130,15 @@ struct UltraView: View {
     func nameRow(_ which: Int, height: CGFloat) -> some View {
        GridRow {
            Spacer()
-           TextField("Player \(which+1)", text: $names[which]).frame(maxHeight: height)
+           TextField("Player \(which+1)", text: $names[which],
+                     onEditingChanged: { changed in
+               if changed {
+                   editingText = true
+               } else {
+                   editingText = false
+               }
+           })
+           .frame(maxHeight: height)
                .overlay(
                    Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
                    .rotationEffect(Angle(degrees: 20))

@@ -15,11 +15,12 @@ struct ChooserView: View {
     @State private var showing4PSheet = false
     @State private var showingCutthroatSheet = false
     @State private var showingUltraSheet = false
-    
+    @State private var showing6SelectorSheet = false
+
 //    @State private var onScreen4P1 = false
 //    @State private var onScreen4P2 = true
-    @State private var cueOnScreen = [false, false, false, false]
-    @State private var selectorOnScreen = [true, true, true, true]
+    @State private var cueOnScreen = [false, false, false, false, false]
+    @State private var selectorOnScreen = [true, true, true, true, true]
 
 
     let baseFontSize = 400.0
@@ -40,6 +41,7 @@ struct ChooserView: View {
                     ballNavLink(numplayers: 3)
                     ballNavLink(numplayers: 4)
                     ballNavLink(numplayers: 5)
+                    ballNavLink(numplayers: 6)
                     Spacer()
                 }
                 .padding()
@@ -50,29 +52,30 @@ struct ChooserView: View {
         .minimumScaleFactor(0.01)
         .lineLimit(1)
     }
-
-
-    func ballNavLink(numplayers: Int) -> some View {
-        return HStack(spacing: 0){
+    
+    
+    func ballNavLink(numplayers: Int, _ teamsOfThree: Bool = false) -> some View {
+        return HStack(spacing: 0) {
             PoolBallView(num: 0).spherify()
                 .offset(x: cueOnScreen[numplayers-2] ? Constants.offset : -800)
             switch numplayers {
             case 2:
-                twoPlayerNav()
+                stripeSolidNav2()
             case 3:
                 cutthroatNav()
             case 4:
-                fourPlayerNav()
+                stripeSolidNav4()
             case 5:
                 ultraNav()
+            case 6:
+                chooseWhichSix()
             default:
                 Text("error") //should not get here
             }
         }
-        
     }
     
-    func twoPlayerNav() -> some View {
+    func stripeSolidNav2() -> some View {
         let numPlayers = 2
         return PoolBallView(num: numPlayers).spherify()
             .opacity(showing2PSheet ? 0 : 1)
@@ -95,7 +98,7 @@ struct ChooserView: View {
             }
     }
   
-    func fourPlayerNav() -> some View {
+    func stripeSolidNav4() -> some View {
         let numPlayers = 4
         return PoolBallView(num: numPlayers).spherify()
             .opacity(showing4PSheet ? 0 : 1)
@@ -118,6 +121,31 @@ struct ChooserView: View {
             }
     }
         
+    func chooseWhichSix() -> some View {
+        let numPlayers = 6
+        return PoolBallView(num: numPlayers).spherify()
+            .opacity(showing6SelectorSheet ? 0 : 1)
+            .offset(x: selectorOnScreen[numPlayers-2] ? Constants.offset : 800)
+            .onTapGesture {
+                withAnimation(.linear) {
+                    cueOnScreen[numPlayers-2] = true
+                } completion: {
+                    withAnimation(.easeOut) {
+                        selectorOnScreen[numPlayers-2] = false
+                    } completion: {
+                        showing6SelectorSheet.toggle()
+                        cueOnScreen[numPlayers-2] = false
+                        selectorOnScreen[numPlayers-2] = true
+                    }
+                }
+            }
+            .fullScreenCover(isPresented: $showing6SelectorSheet) {
+                SixPlayerSelectorView()
+            }
+    }
+
+    
+    
     func cutthroatNav() -> some View {
         let numPlayers = 3
         return PoolBallView(num: numPlayers).spherify()
@@ -138,7 +166,7 @@ struct ChooserView: View {
                 }
             }
             .fullScreenCover(isPresented: $showingCutthroatSheet) {
-                CutthroatView()
+                CutthroatView(players: 3)
             }
     }
     

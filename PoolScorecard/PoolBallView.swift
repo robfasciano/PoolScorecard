@@ -12,7 +12,7 @@ struct PoolBallView: View {
     
     static let halfBallColors = [
         Color(red: 1.00, green: 0.601, blue: 0.013), //yellow
-        Color(red: 0.043, green: 0.268, blue: 0.278), //blue
+        Color(red: 0.043, green: 0.181, blue: 0.564), //blue
         Color(red: 1.00, green: 0.000, blue: 0.065), //red
         Color(red: 0.365, green: 0.064, blue: 0.337), //purple
         Color(red: 1.000, green: 0.300, blue: 0.150), //orange
@@ -43,44 +43,9 @@ struct PoolBallView: View {
                             }
                     }
             }
-            .rotationEffect(Angle(degrees: Double.random(in: -35...35))) //this may not quite work as coded
-//            .spherify()
-        
-//            .overlay {
-//                GeometryReader {geo in
-//                    ZStack {
-//                        Rectangle()
-//                            .fill(RadialGradient(
-//                                colors: [.clear, .black],
-//                                center: UnitPoint(
-//                                    x: Constants.shine.x,
-//                                    y: Constants.shine.y),
-//                                startRadius: 0, endRadius: CGFloat(geo.size.width)*1.1))
-//                            .opacity(Constants.shine.shadow)
-//                        Rectangle()
-//                            .fill(RadialGradient(
-//                                colors: [.white, .clear],
-//                                center: UnitPoint(
-//                                    x: Constants.shine.x,
-//                                    y: Constants.shine.y),
-//                                startRadius: 0, endRadius: CGFloat(geo.size.width)*0.25))
-//                            .opacity(Constants.shine.reflect)
-//                    }
-//                }
-//            }
-//            .clipShape(Circle())
-//            .shadow(color: .black, radius: 2)
-
+            .rotationEffect(Angle(degrees: Double.random(in: -35...35)))
     }
     
-//    struct Constants {
-//        struct shine {
-//            static let x = 0.7
-//            static let y = 0.2
-//            static let shadow = 0.7
-//            static let reflect = 0.3
-//        }
-//    }
 }
 
 
