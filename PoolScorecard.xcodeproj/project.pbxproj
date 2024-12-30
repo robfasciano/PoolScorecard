@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1E0421AC2D22FE8A00231A5D /* SixPlayerSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0421AB2D22FE8A00231A5D /* SixPlayerSelectorView.swift */; };
+		1E0421AE2D231ED300231A5D /* SwapTeamsButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E0421AD2D231ED300231A5D /* SwapTeamsButtonView.swift */; };
 		1E09C1112D17827800B94FA5 /* ChooserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C1072D17827800B94FA5 /* ChooserView.swift */; };
 		1E09C1122D17827800B94FA5 /* CutthroatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C1082D17827800B94FA5 /* CutthroatView.swift */; };
 		1E09C1132D17827800B94FA5 /* PoolBallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E09C1092D17827800B94FA5 /* PoolBallView.swift */; };
@@ -27,6 +28,7 @@
 
 /* Begin PBXFileReference section */
 		1E0421AB2D22FE8A00231A5D /* SixPlayerSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SixPlayerSelectorView.swift; sourceTree = "<group>"; };
+		1E0421AD2D231ED300231A5D /* SwapTeamsButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwapTeamsButtonView.swift; sourceTree = "<group>"; };
 		1E09C1042D17827800B94FA5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1E09C1062D17827800B94FA5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1E09C1072D17827800B94FA5 /* ChooserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooserView.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 				1EA00B6E2D1AFD8B00073BFF /* NewGameView.swift */,
 				1E09C10E2D17827800B94FA5 /* UltraView.swift */,
 				1EA00B702D1DE13A00073BFF /* BackButton.swift */,
+				1E0421AD2D231ED300231A5D /* SwapTeamsButtonView.swift */,
 				1E09C10F2D17827800B94FA5 /* UltraViewModel.swift */,
 				1E09C10D2D17827800B94FA5 /* UltraScorecard.swift */,
 				1E09C1092D17827800B94FA5 /* PoolBallView.swift */,
@@ -200,6 +203,7 @@
 				1EA00B712D1DE13A00073BFF /* BackButton.swift in Sources */,
 				1E09C1192D17827800B94FA5 /* UltraViewModel.swift in Sources */,
 				1E0421AC2D22FE8A00231A5D /* SixPlayerSelectorView.swift in Sources */,
+				1E0421AE2D231ED300231A5D /* SwapTeamsButtonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

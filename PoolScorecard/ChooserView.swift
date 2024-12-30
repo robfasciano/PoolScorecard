@@ -94,7 +94,7 @@ struct ChooserView: View {
                 }
             }
             .fullScreenCover(isPresented: $showing2PSheet) {
-                StripeSolidView(players: numPlayers)
+                StripeSolidView(numPlayers: numPlayers)
             }
     }
   
@@ -117,7 +117,7 @@ struct ChooserView: View {
                 }
             }
             .fullScreenCover(isPresented: $showing4PSheet) {
-                StripeSolidView(players: numPlayers)
+                StripeSolidView(numPlayers: numPlayers)
             }
     }
         
@@ -166,7 +166,7 @@ struct ChooserView: View {
                 }
             }
             .fullScreenCover(isPresented: $showingCutthroatSheet) {
-                CutthroatView(players: 3)
+                CutthroatView(numPlayers: 3)
             }
     }
     

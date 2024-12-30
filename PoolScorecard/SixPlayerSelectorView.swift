@@ -77,7 +77,7 @@ struct SixPlayerSelectorView: View {
                 }
             }
             .fullScreenCover(isPresented: $showingStripeSolid6Sheet) {
-                CutthroatView(players: 6)
+                CutthroatView(numPlayers: 6)
             }
         }
     }
@@ -113,7 +113,7 @@ struct SixPlayerSelectorView: View {
                 }
             }
             .fullScreenCover(isPresented: $showingCutthroat6Sheet) {
-                StripeSolidView(players: 6)
+                StripeSolidView(numPlayers: 6)
             }
         }
     }

@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct StripeSolidView: View {
-    let players: Int
+    let numPlayers: Int
     
 //    @State private var Player1 = ""
 //    @State private var Player2 = ""
 //    @State private var Player3 = ""
 //    @State private var Player4 = ""
-    @State private var Players = ["", "", "", ""]
-    @State private var score = [0, 0, 0, 0]
+    @State private var Players = ["", "", "", "", "", ""]
+    @State private var score = [0, 0, 0, 0, 0, 0]
 
     
     @State private var ballsVisible = false
@@ -49,58 +49,52 @@ struct StripeSolidView: View {
     }
        
     func showNames(LeftmostName: Int) -> some View {
-        let which = LeftmostName - 1
         return HStack {
-            TextField("Player \(which+1)", text: $Players[which])
-                .overlay(
-                    Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
-                    .rotationEffect(Angle(degrees: 20))
-                    .overlay(
-                        Text("\(score[which])").offset(y: 40)
-                            .fontWeight(.black)
-                            .scaleEffect(0.6)
-                            .shadow(color: .white, radius: 5)
-                    )
-                    .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
-                    .onTapGesture(count: 2) {
-                        score[which] += 1
-                    }
-                        .onLongPressGesture {
-                            score[which] -= score[which] > 0 ? 1 : 0
-                        }
-                )
-            if players == 4 {
-                TextField("Player \(which+3)", text: $Players[which+2])
-                    .overlay(
-                        Text(score[which+2] >= (score.max() ?? 0) && score[which+2] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which+2])
-                        .rotationEffect(Angle(degrees: 20))
-                        .overlay(
-                            Text("\(score[which+2])").offset(y: 40)
-                                .fontWeight(.black)
-                                .scaleEffect(0.6)
-                                .shadow(color: .white, radius: 5)
-                        )
-                        .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
-                        .onTapGesture(count: 2) {
-                            score[which+2] += 1
-                        }
-                            .onLongPressGesture {
-                                score[which+2] -= score[which+2] > 0 ? 1 : 0
-                            }
-                    )
+            nameView(which: LeftmostName - 1)
+            if numPlayers >= 4 {
+                nameView(which: LeftmostName + 1)
             }
+            if numPlayers >= 6 {
+                nameView(which: LeftmostName + 3)
+            }
+
         }
     }
     
-    var showBottomNames: some View{
-        HStack {
-            TextField("Player 2", text: $Players[1])
-            if players == 4 {
-                TextField("Player 4", text: $Players[3])
-            }
+    func nameView(which: Int) -> some View {
+        TextField("Player \(which+1)", text: $Players[which])
+            .overlay(
+                Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
+                .rotationEffect(Angle(degrees: 20))
+                .overlay(
+                    Text("\(score[which])").offset(y: 40)
+                        .fontWeight(.black)
+                        .scaleEffect(0.6)
+                        .shadow(color: .white, radius: 5)
+                )
+                .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
+                .onTapGesture(count: 2) {
+                    addToRow(player: which, amount: 1)
+                }
+                    .onLongPressGesture {
+                        score[which] -= score[which] > 0 ? 1 : 0
+                    }
+            )
+    }
+    
+    func addToRow(player: Int, amount: Int) {
+        switch player {
+        case 0, 2, 4:
+            score[0] += amount
+            score[2] += amount
+            score[4] += amount
+        default:
+            score[1] += amount
+            score[3] += amount
+            score[5] += amount
         }
     }
-        
+            
     func show(_ balls: Range<Int>) -> some View {
         return HStack {
             ForEach(balls, id: \.self) { ball in
@@ -117,7 +111,7 @@ struct StripeSolidView: View {
     var showBottomButtons: some View {
         HStack {
             swapBalls
-            if players == 4 {
+            if numPlayers > 2 {
                 Spacer()
                 swapTeams
             }
@@ -126,18 +120,9 @@ struct StripeSolidView: View {
     
     var swapBalls: some View {
         Button(action: {
-            var temp = Players[0]
-            var tempScore = score[0]
-            Players[0] = Players[1]
-            score[0] = score[1]
-            Players[1] = temp
-            score[1] = tempScore
-            temp = Players[2]
-            tempScore = score[2]
-            Players[2] = Players[3]
-            score[2] = score[3]
-            Players[3] = temp
-            score[3] = tempScore
+            swapTwoPlayers(first: 0)
+            swapTwoPlayers(first: 2)
+            swapTwoPlayers(first: 4)
             withAnimation() {
                 ballsVisible = false
             } completion: {
@@ -156,32 +141,39 @@ struct StripeSolidView: View {
         }
     }
 
+    func swapTwoPlayers(first: Int) {
+        let temp = Players[first]
+        let tempScore = score[first]
+        Players[first] = Players[first+1]
+        score[first] = score[first+1]
+        Players[first+1] = temp
+        score[first+1] = tempScore
+    }
+    
+    
     var swapTeams: some View {
         Button(action: {
             let tempPlayers = Players
             let tempScores = score
-            let shuffleOrder = [0, 1, 2, 3].shuffled()
-
-            for i in 0...Players.count - 1 {
+            var shuffleOrder: [Int] = []
+            for i in 0...numPlayers - 1 {
+                shuffleOrder.append(i)
+            }
+            shuffleOrder = shuffleOrder.shuffled()
+            
+            for i in 0...numPlayers - 1 {
                 Players[i] = tempPlayers[shuffleOrder[i]]
                 score[i] = tempScores[shuffleOrder[i]]
             }
         })
         {
-            VStack{
-                Image(systemName: "person.line.dotted.person.fill")
-                    .font(.system(size: 100))
-                    .minimumScaleFactor(0.01)
-                Text("Change Teams")
-                    .font(.system(size: 40))
-                    .minimumScaleFactor(0.01)
-            }
+            SwapTeamsButtonView()
         }
     }
 
 }
 
 #Preview {
-    StripeSolidView(players: 2)
-    StripeSolidView(players: 4)
+//    StripeSolidView(players: 2)
+    StripeSolidView(numPlayers: 6)
 }

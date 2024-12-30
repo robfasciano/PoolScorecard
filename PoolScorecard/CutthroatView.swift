@@ -10,11 +10,11 @@ import SwiftUI
 var landscape: Bool = true
 
 struct CutthroatView: View {
-    let players: Int
+    let numPlayers: Int
     
-    @State private var names = ["", "", ""]
-//    @State private var score = [1,2,3]
-    @State private var score = [0, 0, 0]
+    @State private var names = ["MattFaye", "Bobby", "Ella", "Mom", "Dad", "Lily"]
+//    @State private var names = ["", "", "", "", "", ""]
+    @State private var score = [0, 0, 0, 0, 0, 0]
     @State private var results = [
         [false, false, false], //L M H for p1
         [false, false, false], //L M H for p2
@@ -30,6 +30,7 @@ struct CutthroatView: View {
     private let lowBalls = [1, 2, 3, 4, 5]
     private let midBalls = [6, 7 ,8, 9, 10]
     private let hiBalls = [11, 12, 13, 14, 15]
+    private let teamColor: [Color] = [.red, .white, .blue]
     
         
     var body: some View {
@@ -40,8 +41,12 @@ struct CutthroatView: View {
                     landscape = false
                 }
                 return VStack {
-                    BackButton()
-                        .onTapGesture(perform: { dismiss() })
+                    HStack{ BackButton()
+                            .onTapGesture(perform: { dismiss() })
+                        if numPlayers > 3 {
+                            swapTeams
+                        }
+                    }
                     Grid() {
                         if !editingText {
                             ballGroups
@@ -56,9 +61,9 @@ struct CutthroatView: View {
                         }
                         nameRow(2, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
                     }
+                    
                     Spacer()
                 }
-                
                 .font(Font.custom(PoolScorecardApp.Constants.fontName, size: Constants.Names.maxFont))
                 .textFieldStyle(.automatic)
                 .padding()
@@ -80,9 +85,28 @@ struct CutthroatView: View {
             OneBallGroup(hiBalls)
             Spacer()
         }
-
-
     }
+    
+    var swapTeams: some View {
+        Button(action: {
+            let tempPlayers = names
+            let tempScores = score
+            var shuffleOrder: [Int] = []
+            for i in 0...numPlayers - 1 {
+                shuffleOrder.append(i)
+            }
+            shuffleOrder = shuffleOrder.shuffled()
+            
+            for i in 0...numPlayers - 1 {
+                names[i] = tempPlayers[shuffleOrder[i]]
+                score[i] = tempScores[shuffleOrder[i]]
+            }
+        })
+        {
+            SwapTeamsButtonView()
+        }
+    }
+
     
     func OneBallGroup(_ balls: [Int]) -> some View {
         GeometryReader {geometry in
@@ -139,40 +163,69 @@ struct CutthroatView: View {
     func nameRow(_ which: Int, height: CGFloat) -> some View {
         GridRow {
             Spacer()
-            TextField("Player \(which+1)",
-                      text: $names[which],
-                      onEditingChanged: { changed in
-                if changed {
-                    editingText = true
-                } else {
-                    editingText = false
+            VStack {
+                nameView(which: which, height: height)
+                if numPlayers >= 6 {
+                    nameView(which: which + 3, height: height)
                 }
-            })
-            .frame(maxHeight: height)
-            .fontWeight(.bold)
-                .foregroundStyle(PoolScorecardApp.Constants.textColor1)
-                .overlay(
-                    Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
-                    .rotationEffect(Angle(degrees: 20))
-                    .overlay(
-                        Text("\(score[which])").offset(y: 40)
-                            .fontWeight(.black)
-                            .scaleEffect(0.6)
-                            .shadow(color: .white, radius: 5)
-                    )
-                    .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
-                    .onTapGesture(count: 2) {
-                        score[which] += 1
-                    }
-                        .onLongPressGesture {
-                            score[which] -= score[which] > 0 ? 1 : 0
-                        }
-                )
+            }
             statButton(which, "L").frame(maxHeight: height)
             statButton(which, "M").frame(maxHeight: height)
             statButton(which, "H").frame(maxHeight: height)
             Spacer()
         }.minimumScaleFactor(0.001)
+    }
+    
+    func nameView(which: Int, height: CGFloat) -> some View {
+        var adjustedHeight = height
+        if numPlayers >= 6 {
+            adjustedHeight = height/2
+        }
+        return TextField("Player \(which+1)",
+                  text: $names[which],
+                  onEditingChanged: { changed in
+            if changed {
+                editingText = true
+            } else {
+                editingText = false
+            }
+        })
+        .shadow(color: teamColor[which % 3], radius: numPlayers >= 6 ? 30 : 0)
+        .frame(maxHeight: adjustedHeight)
+        .fontWeight(.bold)
+            .foregroundStyle(PoolScorecardApp.Constants.textColor1)
+            .overlay(
+                Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
+                .rotationEffect(Angle(degrees: 20))
+                .overlay(
+                    Text("\(score[which])").offset(y: 40)
+                        .fontWeight(.black)
+                        .scaleEffect(0.6)
+                        .shadow(color: .white, radius: 5)
+                )
+                .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
+                .onTapGesture(count: 2) {
+                    addToRow(player: which, amount: 1)
+                }
+                    .onLongPressGesture {
+                        score[which] -= score[which] > 0 ? 1 : 0
+                    }
+            )
+    }
+
+    
+    func addToRow(player: Int, amount: Int) {
+        switch player {
+        case 0, 3:
+            score[0] += amount
+            score[3] += amount
+        case 1, 4:
+            score[1] += amount
+            score[4] += amount
+        default:
+            score[2] += amount
+            score[5] += amount
+        }
     }
 
         
@@ -261,7 +314,6 @@ struct CutthroatView: View {
         }
     }
     
-    
     func isCircled(_ player: Int, _ indicator: Int) -> Bool {
         var markCount = 0
         for p in 0..<results.count {
@@ -325,26 +377,26 @@ struct CutthroatView: View {
             NewGameView(ballsVisible: ballsVisible)
         }
     }
-    
-    private struct Constants {
-        static let ballPadding = 5.0
-        static let iPad = 5.0 //padding between ball (HStack) when 2 in row
-        struct Names {
-            static let maxFont: CGFloat = 120
-            struct screenRatio {
-                static let landscape: CGFloat = 1 / 1.8
-                static let portrait: CGFloat = 1 / 2.0
+        
+        private struct Constants {
+            static let ballPadding = 5.0
+            static let iPad = 5.0 //padding between ball (HStack) when 2 in row
+            struct Names {
+                static let maxFont: CGFloat = 120
+                struct screenRatio {
+                    static let landscape: CGFloat = 1 / 1.8
+                    static let portrait: CGFloat = 1 / 2.0
+                }
+            }
+            struct levelText {
+                static let maxFont: CGFloat = 200
+                static let minFont: CGFloat = 15
+                static let minFontScale: CGFloat = minFont / maxFont
             }
         }
-        struct levelText {
-            static let maxFont: CGFloat = 200
-            static let minFont: CGFloat = 15
-            static let minFontScale: CGFloat = minFont / maxFont
-        }
     }
-}
 
 
 #Preview {
-    CutthroatView(players: 3)
+    CutthroatView(numPlayers: 6)
 }
