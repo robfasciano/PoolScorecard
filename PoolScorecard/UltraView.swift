@@ -10,10 +10,11 @@ import SwiftUI
 struct UltraView: View {
     @ObservedObject var scorecard: ultraViewModel
             
-    @State private var names = ["", "", "", "", ""]
+    @State private var names = ["", "", "", "", "", ""] //need extra name to use same GetNewnames view
     @State private var score = [0, 0, 0, 0, 0]
     @State private var editingText = false
 
+    @State private var showingNameSheet = false
     
     private let ultraLowBalls = [1, 2, 3]
     private let lowBalls = [4, 5, 6]
@@ -126,45 +127,37 @@ struct UltraView: View {
         }
     
     let indicators = ["UL", "L", "M", "H", "UH"]
-
+    
     func nameRow(_ which: Int, height: CGFloat) -> some View {
-       GridRow {
-           Spacer()
-           TextField("Player \(which+1)", text: $names[which],
-                     onEditingChanged: { changed in
-               if changed {
-                   editingText = true
-               } else {
-                   editingText = false
-               }
-           })
-           .frame(maxHeight: height)
-               .overlay(
-                   Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
-                   .rotationEffect(Angle(degrees: 20))
-                   .overlay(
-                       Text("\(score[which])").offset(y: 40)
-                           .fontWeight(.black)
-                           .scaleEffect(0.6)
-                           .shadow(color: .white, radius: 5)
-                   )
-                   .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
-                   .onTapGesture(count: 2) {
-                       score[which] += 1
-                   }
-                       .onLongPressGesture {
-                           score[which] -= score[which] > 0 ? 1 : 0
-                       }
-               )
-               
-           statButton(which, indicators[0]).frame(maxHeight: height)
-           statButton(which, indicators[1]).frame(maxHeight: height)
-           statButton(which, indicators[2]).frame(maxHeight: height)
-           statButton(which, indicators[3]).frame(maxHeight: height)
-           statButton(which, indicators[4]).frame(maxHeight: height)
-           Spacer()
-       }.minimumScaleFactor(0.001)
-   }
+        GridRow {
+            Spacer()
+            Text(names[which] == "" ? "Player \(which+1)" : names[which])
+                .onTapGesture {
+                    showingNameSheet.toggle()
+                }
+                .fullScreenCover(isPresented: $showingNameSheet) {
+                    GetNewNames(names: $names, count: 5)
+                }
+                .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
+                .overlay(alignment: .topTrailing) {
+                    HatOverlay(score: score, which: which, name: names[which])
+                        .onTapGesture(count: 2) {
+                            score[which] += 1
+                        }
+                        .onLongPressGesture {
+                            score[which] -= score[which] > 0 ? 1 : 0
+                        }
+                }
+                .frame(maxHeight: height)
+            
+            statButton(which, indicators[0]).frame(maxHeight: height)
+            statButton(which, indicators[1]).frame(maxHeight: height)
+            statButton(which, indicators[2]).frame(maxHeight: height)
+            statButton(which, indicators[3]).frame(maxHeight: height)
+            statButton(which, indicators[4]).frame(maxHeight: height)
+            Spacer()
+        }.minimumScaleFactor(0.001)
+    }
 
         
      func statButton(_ player: Int, _ level: String) -> some View {

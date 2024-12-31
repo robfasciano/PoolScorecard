@@ -17,7 +17,8 @@ struct StripeSolidView: View {
     @State private var Players = ["", "", "", "", "", ""]
     @State private var score = [0, 0, 0, 0, 0, 0]
 
-    
+    @State private var showingNameSheet = false
+
     @State private var ballsVisible = false
     @Environment(\.dismiss) var dismiss
     
@@ -25,7 +26,6 @@ struct StripeSolidView: View {
     private let stripes = 9..<16
 
     var body: some View {
-        
         let nameSize: CGFloat = 100
         VStack{
             BackButton()
@@ -37,7 +37,7 @@ struct StripeSolidView: View {
             Spacer()
             showBottomButtons
         }
-        .font(.system(size: nameSize))
+        .font(Font.custom(PoolScorecardApp.Constants.fontName, size: nameSize))
         .textFieldStyle(.automatic)
         .multilineTextAlignment(.center)
         .padding(50)
@@ -49,7 +49,7 @@ struct StripeSolidView: View {
     }
        
     func showNames(LeftmostName: Int) -> some View {
-        return HStack {
+        return HStack(spacing: 50) {
             nameView(which: LeftmostName - 1)
             if numPlayers >= 4 {
                 nameView(which: LeftmostName + 1)
@@ -62,26 +62,25 @@ struct StripeSolidView: View {
     }
     
     func nameView(which: Int) -> some View {
-        TextField("Player \(which+1)", text: $Players[which])
-            .overlay(
-                Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
-                .rotationEffect(Angle(degrees: 20))
-                .overlay(
-                    Text("\(score[which])").offset(y: 40)
-                        .fontWeight(.black)
-                        .scaleEffect(0.6)
-                        .shadow(color: .white, radius: 5)
-                )
-                .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
-                .onTapGesture(count: 2) {
-                    addToRow(player: which, amount: 1)
-                }
+        Text(Players[which] == "" ? "Player \(which+1)" : Players[which])
+            .onTapGesture {
+                showingNameSheet.toggle()
+            }
+            .fullScreenCover(isPresented: $showingNameSheet) {
+                GetNewNames(names: $Players, count: numPlayers)
+           }
+            .foregroundStyle(Players[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
+            .overlay(alignment: .topTrailing) {
+                HatOverlay(score: score, which: which, name: Players[which])
+                    .onTapGesture(count: 2) {
+                        addToRow(player: which, amount: 1)
+                    }
                     .onLongPressGesture {
                         score[which] -= score[which] > 0 ? 1 : 0
                     }
-            )
+            }
     }
-    
+        
     func addToRow(player: Int, amount: Int) {
         switch player {
         case 0, 2, 4:

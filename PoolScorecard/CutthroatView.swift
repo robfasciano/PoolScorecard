@@ -12,16 +12,17 @@ var landscape: Bool = true
 struct CutthroatView: View {
     let numPlayers: Int
     
-    @State private var names = ["MattFaye", "Bobby", "Ella", "Mom", "Dad", "Lily"]
-//    @State private var names = ["", "", "", "", "", ""]
+    
+    @State private var showingNameSheet = false
+
+//    @State var names = ["MattFayTheBrotherInLaw", "Bobby", "Ella", "Mom", "Dad", "Lily"]
+    @State private var names = ["", "", "", "", "", ""]
     @State private var score = [0, 0, 0, 0, 0, 0]
     @State private var results = [
         [false, false, false], //L M H for p1
         [false, false, false], //L M H for p2
         [false, false, false]  //L M H for p3
     ]
-    
-    @State private var editingText = false
     
     @State var ballsVisible = false
     @Environment(\.dismiss) var dismiss
@@ -48,17 +49,9 @@ struct CutthroatView: View {
                         }
                     }
                     Grid() {
-                        if !editingText {
                             ballGroups
-                        }
                         nameRow(0, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
-                        if editingText {
-                            Spacer()
-                        }
                         nameRow(1, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
-                        if editingText {
-                            Spacer()
-                        }
                         nameRow(2, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
                     }
                     
@@ -181,36 +174,28 @@ struct CutthroatView: View {
         if numPlayers >= 6 {
             adjustedHeight = height/2
         }
-        return TextField("Player \(which+1)",
-                  text: $names[which],
-                  onEditingChanged: { changed in
-            if changed {
-                editingText = true
-            } else {
-                editingText = false
-            }
-        })
-        .shadow(color: teamColor[which % 3], radius: numPlayers >= 6 ? 30 : 0)
-        .frame(maxHeight: adjustedHeight)
-        .fontWeight(.bold)
-            .foregroundStyle(PoolScorecardApp.Constants.textColor1)
-            .overlay(
-                Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
-                .rotationEffect(Angle(degrees: 20))
-                .overlay(
-                    Text("\(score[which])").offset(y: 40)
-                        .fontWeight(.black)
-                        .scaleEffect(0.6)
-                        .shadow(color: .white, radius: 5)
-                )
-                .scaleEffect(0.5, anchor: UnitPoint(x: 3, y: -0.2))
-                .onTapGesture(count: 2) {
-                    addToRow(player: which, amount: 1)
-                }
+        return Text(names[which] == "" ? "Player \(which+1)" : names[which])
+            .shadow(color: teamColor[which % 3], radius: numPlayers >= 6 ? 15 : 0)
+            .fontWeight(.bold)
+            .minimumScaleFactor(0.01)
+            .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
+            .overlay(alignment: .topTrailing) {
+                HatOverlay(score: score, which: which, name: names[which])
+                    .onTapGesture(count: 2) {
+                        addToRow(player: which, amount: 1)
+                    }
                     .onLongPressGesture {
                         score[which] -= score[which] > 0 ? 1 : 0
                     }
-            )
+            }
+            .frame(maxHeight: adjustedHeight)
+            .onTapGesture {
+                showingNameSheet.toggle()
+            }
+            .fullScreenCover(isPresented: $showingNameSheet) {
+                GetNewNames(names: $names, count: numPlayers)
+           }
+
     }
 
     
