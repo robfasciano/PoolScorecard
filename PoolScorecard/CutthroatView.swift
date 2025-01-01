@@ -156,12 +156,15 @@ struct CutthroatView: View {
     func nameRow(_ which: Int, height: CGFloat) -> some View {
         GridRow {
             Spacer()
-            VStack {
-                nameView(which: which, height: height)
                 if numPlayers >= 6 {
-                    nameView(which: which + 3, height: height)
+                    let first = which * 2
+                    VStack(spacing: 0) {
+                        nameView(which: first, height: height)
+                        nameView(which: first + 1, height: height)
+                    }
+                } else {
+                    nameView(which: which, height: height)
                 }
-            }
             statButton(which, "L").frame(maxHeight: height)
             statButton(which, "M").frame(maxHeight: height)
             statButton(which, "H").frame(maxHeight: height)

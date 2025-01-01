@@ -24,11 +24,14 @@ struct GetNewNames: View {
                 Text("Edit Player Names")
                     .fontWeight(.black)
                 Spacer()
-                ForEach(0..<6) { i in
-                    TextField("Player \(i+1)", text: $names[i])
-                        .background(i < count ? PoolScorecardApp.Constants.feltColor : .gray)
+                ScrollView {
+                    ForEach(0..<6) { i in
+                        TextField("Player \(i+1)", text: $names[i])
+                            .background(i < count ? PoolScorecardApp.Constants.feltColor : .gray)
+                    }
+                    Spacer()
                 }
-                Spacer()
+                    
             }
             .font(Font.custom(PoolScorecardApp.Constants.fontName, size: 80))
             .foregroundStyle(PoolScorecardApp.Constants.textColor1)
@@ -36,7 +39,7 @@ struct GetNewNames: View {
             .multilineTextAlignment(.center)
             .autocorrectionDisabled()
             .padding()
-            .minimumScaleFactor(0.1)
+            .minimumScaleFactor(0.1) //this does not seem to work for textfield
         }
     }
 }
