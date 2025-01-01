@@ -22,7 +22,7 @@ struct HatOverlay: View {
                     .shadow(color: .white, radius: 6)
                     .foregroundStyle(score[which] == 0 ? .clear : .black)
             )
-            .scaleEffect(0.5, anchor: UnitPoint(x: xOffset(name: name), y: tallChar(name: name) ? -0.1 : 0.2))
+            .scaleEffect(0.5, anchor: UnitPoint(x: xOffset(name: name), y: yOffset(name: name)))
     }
     
     func xOffset(name: String) -> CGFloat {
@@ -33,11 +33,10 @@ struct HatOverlay: View {
         return normalOffset
     }
     
-    func tallChar(name: String) -> Bool {
-        guard let lastChar = name.last else { return true }
-        if lastChar.isUppercase { return true }
-        return ["d", "f", "l", "t"].contains(String(lastChar))
-
+    func yOffset(name: String) -> CGFloat {
+        guard let lastChar = name.last else { return -0.1 }
+        if lastChar.isUppercase { return 0.0 }
+        return ["d", "f", "l", "t"].contains(String(lastChar)) ? -0.1 : 0.2
     }
 }
 

@@ -45,8 +45,8 @@ struct ChooserView: View {
                     Spacer()
                 }
                 .padding()
-                
             }
+            .padding()
         }
         .font(.system(size: baseFontSize))
         .minimumScaleFactor(0.01)

@@ -42,19 +42,20 @@ struct CutthroatView: View {
                     landscape = false
                 }
                 return VStack {
-                    HStack{ BackButton()
+                    HStack {
+                        BackButton()
                             .onTapGesture(perform: { dismiss() })
                         if numPlayers > 3 {
                             swapTeams
                         }
                     }
+                    .frame(maxHeight: 70)
                     Grid() {
                             ballGroups
                         nameRow(0, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
                         nameRow(1, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
                         nameRow(2, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
                     }
-                    
                     Spacer()
                 }
                 .font(Font.custom(PoolScorecardApp.Constants.fontName, size: Constants.Names.maxFont))
@@ -94,9 +95,10 @@ struct CutthroatView: View {
                 names[i] = tempPlayers[shuffleOrder[i]]
                 score[i] = tempScores[shuffleOrder[i]]
             }
+            startNewGame()
         })
         {
-            SwapTeamsButtonView()
+            ShuffleTeamsButtonView()
         }
     }
 
@@ -123,11 +125,9 @@ struct CutthroatView: View {
                         }
                     }
                 }
-            }
-                .padding(0)
+        }
+        .padding(0)
     }
-
-    
     
     func ballRow(_ balls: [Int], HSpacing: CGFloat = 0) -> some View {
         HStack(spacing: HSpacing) {
@@ -204,14 +204,14 @@ struct CutthroatView: View {
     
     func addToRow(player: Int, amount: Int) {
         switch player {
-        case 0, 3:
+        case 0, 1:
             score[0] += amount
-            score[3] += amount
-        case 1, 4:
             score[1] += amount
-            score[4] += amount
-        default:
+        case 2, 3:
             score[2] += amount
+            score[3] += amount
+        default:
+            score[4] += amount
             score[5] += amount
         }
     }
@@ -346,20 +346,22 @@ struct CutthroatView: View {
             .transition(.asymmetric(insertion: .scale(scale: 3).animation(.bouncy), removal: .identity))
     }
     
+    func startNewGame() {
+        for i in 0..<results.count {
+            for j in 0..<results[0].count {
+                results[i][j] = false
+            }
+        }
+        withAnimation {
+            ballsVisible = false
+        } completion: {
+            ballsVisible = true
+        }
+    }
     
      var newGame: some View {
         Button(action: {
-            for i in 0..<results.count {
-                for j in 0..<results[0].count {
-                    results[i][j] = false
-                }
-            }
-            withAnimation {
-                ballsVisible = false
-            } completion: {
-                ballsVisible = true
-            }
-
+            startNewGame()
         })
         {
             NewGameView(ballsVisible: ballsVisible)

@@ -129,14 +129,7 @@ struct StripeSolidView: View {
             }
         })
         {
-            VStack{
-                Image(systemName: "arrow.trianglehead.swap")
-                    .font(.system(size: 100))
-                    .minimumScaleFactor(0.01)
-                Text("Swap Names")
-                    .font(.system(size: 40))
-                    .minimumScaleFactor(0.01)
-            }
+            SwapBallsButtonView()
         }
     }
 
@@ -164,9 +157,14 @@ struct StripeSolidView: View {
                 Players[i] = tempPlayers[shuffleOrder[i]]
                 score[i] = tempScores[shuffleOrder[i]]
             }
+            withAnimation() {
+                ballsVisible = false
+            } completion: {
+                ballsVisible = true
+            }
         })
         {
-            SwapTeamsButtonView()
+            ShuffleTeamsButtonView()
         }
     }
 
