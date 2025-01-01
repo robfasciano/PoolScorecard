@@ -178,7 +178,7 @@ struct CutthroatView: View {
             adjustedHeight = height/2
         }
         return Text(names[which] == "" ? "Player \(which+1)" : names[which])
-            .shadow(color: teamColor[which % 3], radius: numPlayers >= 6 ? 15 : 0)
+            .shadow(color: teamColor[which / 2], radius: numPlayers >= 6 ? 15 : 0)
             .fontWeight(.bold)
             .minimumScaleFactor(0.01)
             .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
