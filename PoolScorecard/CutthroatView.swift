@@ -45,9 +45,7 @@ struct CutthroatView: View {
                     HStack {
                         BackButton()
                             .onTapGesture(perform: { dismiss() })
-                        if numPlayers > 3 {
-                            swapTeams
-                        }
+                        swapTeams
                     }
                     .frame(maxHeight: 70)
                     Grid() {
@@ -203,16 +201,20 @@ struct CutthroatView: View {
 
     
     func addToRow(player: Int, amount: Int) {
-        switch player {
-        case 0, 1:
-            score[0] += amount
-            score[1] += amount
-        case 2, 3:
-            score[2] += amount
-            score[3] += amount
-        default:
-            score[4] += amount
-            score[5] += amount
+        if numPlayers >= 6 {
+            switch player {
+            case 0, 1:
+                score[0] += amount
+                score[1] += amount
+            case 2, 3:
+                score[2] += amount
+                score[3] += amount
+            default:
+                score[4] += amount
+                score[5] += amount
+            }
+        } else {
+            score[player] += amount
         }
     }
 

@@ -28,6 +28,7 @@ struct GetNewNames: View {
                     ForEach(0..<6) { i in
                         TextField("Player \(i+1)", text: $names[i])
                             .background(i < count ? PoolScorecardApp.Constants.feltColor : .gray)
+//                            .textInputCompletion("")
                     }
                     Spacer()
                 }

@@ -15,7 +15,7 @@ struct ShuffleTeamsButtonView: View {
 
 struct SwapBallsButtonView: View {
     var body: some View {
-        simpleButton(image: "arrow.trianglehead.swap", text: "Swop")
+        simpleButton(image: "arrow.trianglehead.swap", text: "Swap")
     }
 }
 
