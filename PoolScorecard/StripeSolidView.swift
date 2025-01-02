@@ -27,15 +27,20 @@ struct StripeSolidView: View {
 
     var body: some View {
         let nameSize: CGFloat = 100
-        VStack{
+        VStack {
             BackButton()
                 .onTapGesture(perform: { dismiss() })
-            showNames(LeftmostName: 1)
-            show(solids)
-            showNames(LeftmostName: 2)
-            show(stripes)
+            VStack(spacing: 0) {
+                showNames(LeftmostName: 1)
+                show(solids)
+            }
+            VStack(spacing: 0) {
+                showNames(LeftmostName: 2)
+                show(stripes)
+            }
             Spacer()
             showBottomButtons
+                .frame(maxHeight: PoolScorecardApp.Constants.buttonHeight)
         }
         .font(Font.custom(PoolScorecardApp.Constants.fontName, size: nameSize))
         .textFieldStyle(.automatic)

@@ -18,11 +18,11 @@ struct PoolBallView: View {
         Color(red: 1.000, green: 0.300, blue: 0.150), //orange
         Color(red: 0.100, green: 0.348, blue: 0.051), //green
         Color(red: 0.500, green: 0.050, blue: 0.150)] //magenta
-    static let ballColors = [.white] + halfBallColors + [.black] + halfBallColors
+    static let ballColors = [Constants.ballWhite] + halfBallColors + [.black] + halfBallColors
     
     var body: some View {
         Rectangle()
-            .fill(num<9 ? PoolBallView.ballColors[num] : .white)
+            .fill(num<9 ? PoolBallView.ballColors[num] : Constants.ballWhite)
             .aspectRatio(1, contentMode: .fit)
             .overlay {
                 Rectangle()
@@ -31,19 +31,26 @@ struct PoolBallView: View {
                 
                     .overlay {
                         Circle()
-                            .fill(.white)
+                            .fill(Constants.ballWhite)
                             .aspectRatio(0.75, contentMode: .fit)
                             .overlay {
                                 Text(num > 0 ? String(num) : "")
-                                    .font(.system(size: 200))
+                                    .font(.system(size: Constants.maxTextSize))
                                     .fontWeight(.bold)
-                                    .minimumScaleFactor(0.001)
+                                    .minimumScaleFactor(Constants.textScale)
                                     .foregroundStyle(.black)
                                     .aspectRatio(num<10 ? 0.45 : 0.7, contentMode: .fit)
                             }
                     }
             }
             .rotationEffect(Angle(degrees: Double.random(in: -35...35)))
+    }
+    
+    struct Constants {
+        static let maxTextSize: CGFloat = 200
+        static let minTextSize: CGFloat = 5
+        static let textScale: CGFloat = minTextSize / maxTextSize
+        static let ballWhite = Color(red: 1.00, green: 0.900, blue: 0.650)
     }
     
 }

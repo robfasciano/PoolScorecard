@@ -47,7 +47,7 @@ struct CutthroatView: View {
                             .onTapGesture(perform: { dismiss() })
                         swapTeams
                     }
-                    .frame(maxHeight: 70)
+                    .frame(maxHeight: PoolScorecardApp.Constants.buttonHeight)
                     Grid() {
                             ballGroups
                         nameRow(0, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))

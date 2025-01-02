@@ -21,9 +21,6 @@ struct ChooserView: View {
 //    @State private var onScreen4P2 = true
     @State private var cueOnScreen = [false, false, false, false, false]
     @State private var selectorOnScreen = [true, true, true, true, true]
-
-
-    let baseFontSize = 400.0
     
     var body: some View {
         GeometryReader {geometry in
@@ -48,7 +45,7 @@ struct ChooserView: View {
             }
             .padding()
         }
-        .font(.system(size: baseFontSize))
+        .font(.system(size: Constants.baseFontSize))
         .minimumScaleFactor(0.01)
         .lineLimit(1)
     }
@@ -195,6 +192,7 @@ struct ChooserView: View {
     
 
     struct Constants {
+        static let baseFontSize = 400.0
         static let offset = -95.0
     }
 }
