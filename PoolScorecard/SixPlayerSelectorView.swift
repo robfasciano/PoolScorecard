@@ -9,6 +9,8 @@ import SwiftUI
 
 
 struct SixPlayerSelectorView: View {
+    @Binding var lightAngle: Double
+
     @StateObject var scorecard = ultraViewModel()  //this is kind of @ObservedObject??
     
     @State private var showingStripeSolid6Sheet = false
@@ -28,7 +30,13 @@ struct SixPlayerSelectorView: View {
                 .ignoresSafeArea()
             VStack {
                 BackButton()
-                    .onTapGesture(perform: { dismiss() })
+                    .onTapGesture(perform: {
+                        lightAngle = ChooserView.Constants.lightAngle.initial
+                        withAnimation(.easeInOut(duration: ChooserView.Constants.lightAngle.duration)) {
+                            lightAngle = ChooserView.Constants.lightAngle.final
+                        }
+                        dismiss()
+                    })
                 Spacer()
                 Text("Select 6-Player Configuration")
                     .foregroundStyle(PoolScorecardApp.Constants.textColor1)
@@ -77,7 +85,7 @@ struct SixPlayerSelectorView: View {
                 }
             }
             .fullScreenCover(isPresented: $showingStripeSolid6Sheet) {
-                CutthroatView(numPlayers: 6)
+                CutthroatView(numPlayers: 6, lightAngle: $lightAngle)
             }
         }
     }
@@ -113,7 +121,7 @@ struct SixPlayerSelectorView: View {
                 }
             }
             .fullScreenCover(isPresented: $showingCutthroat6Sheet) {
-                StripeSolidView(numPlayers: 6)
+                StripeSolidView(numPlayers: 6, lightAngle: $lightAngle)
             }
         }
     }
@@ -126,5 +134,5 @@ struct SixPlayerSelectorView: View {
 
 
 #Preview {
-    SixPlayerSelectorView()
+    SixPlayerSelectorView(lightAngle: .constant(90))
 }

@@ -56,8 +56,8 @@ struct Spherify: ViewModifier, Animatable {
 }
 
 extension View {
-    func spherify() -> some View {
-        modifier(Spherify())
+    func spherify(angle: Double = 50) -> some View {
+        modifier(Spherify(angle: angle))
     }
 }
 

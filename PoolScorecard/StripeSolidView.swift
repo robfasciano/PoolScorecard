@@ -9,7 +9,8 @@ import SwiftUI
 
 struct StripeSolidView: View {
     let numPlayers: Int
-    
+    @Binding var lightAngle: Double
+
 //    @State private var Player1 = ""
 //    @State private var Player2 = ""
 //    @State private var Player3 = ""
@@ -29,7 +30,13 @@ struct StripeSolidView: View {
         let nameSize: CGFloat = 100
         VStack {
             BackButton()
-                .onTapGesture(perform: { dismiss() })
+                .onTapGesture(perform: {
+                    lightAngle = ChooserView.Constants.lightAngle.initial
+                    withAnimation(.easeInOut(duration: ChooserView.Constants.lightAngle.duration)) {
+                        lightAngle = ChooserView.Constants.lightAngle.final
+                    }
+                    dismiss()
+                })
             VStack(spacing: 0) {
                 showNames(LeftmostName: 1)
                 show(solids)
@@ -177,5 +184,5 @@ struct StripeSolidView: View {
 
 #Preview {
 //    StripeSolidView(players: 2)
-    StripeSolidView(numPlayers: 6)
+    StripeSolidView(numPlayers: 6, lightAngle: .constant(90))
 }

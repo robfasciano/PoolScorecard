@@ -9,6 +9,7 @@ import SwiftUI
 
 struct UltraView: View {
     @ObservedObject var scorecard: ultraViewModel
+    @Binding var lightAngle: Double
             
     @State private var names = ["", "", "", "", "", ""] //need extra name to use same GetNewnames view
     @State private var score = [0, 0, 0, 0, 0]
@@ -33,9 +34,13 @@ struct UltraView: View {
                 landscape = geometry.size.height > geometry.size.width ? false : true
                 return VStack {
                     BackButton()
-                    .onTapGesture(perform: {
-                        dismiss()
-                    })
+                        .onTapGesture(perform: {
+                            lightAngle = ChooserView.Constants.lightAngle.initial
+                            withAnimation(.easeInOut(duration: ChooserView.Constants.lightAngle.duration)) {
+                                lightAngle = ChooserView.Constants.lightAngle.final
+                            }
+                            dismiss()
+                        })
                     Grid() {
                         if !editingText {
                             ballGroups
@@ -227,5 +232,5 @@ struct UltraView: View {
 
 
 #Preview {
-    UltraView(scorecard: ultraViewModel())
+    UltraView(scorecard: ultraViewModel(), lightAngle: .constant(90))
 }

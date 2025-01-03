@@ -11,7 +11,7 @@ var landscape: Bool = true
 
 struct CutthroatView: View {
     let numPlayers: Int
-    
+    @Binding var lightAngle: Double    
     
     @State private var showingNameSheet = false
 
@@ -44,7 +44,13 @@ struct CutthroatView: View {
                 return VStack {
                     HStack {
                         BackButton()
-                            .onTapGesture(perform: { dismiss() })
+                            .onTapGesture(perform: {
+                                lightAngle = ChooserView.Constants.lightAngle.initial
+                                withAnimation(.easeInOut(duration: ChooserView.Constants.lightAngle.duration)) {
+                                    lightAngle = ChooserView.Constants.lightAngle.final
+                                }
+                                dismiss()
+                            })
                         swapTeams
                     }
                     .frame(maxHeight: PoolScorecardApp.Constants.buttonHeight)
@@ -390,5 +396,5 @@ struct CutthroatView: View {
 
 
 #Preview {
-    CutthroatView(numPlayers: 6)
+    CutthroatView(numPlayers: 6, lightAngle: .constant(90))
 }
