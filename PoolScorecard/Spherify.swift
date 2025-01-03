@@ -8,11 +8,14 @@
 import SwiftUI
 
 struct Spherify: ViewModifier, Animatable {
+    var x: CGFloat
+    var y: CGFloat
     
-//    init(isFaceUp: Bool, isSelected: Bool) {
-//        rotation = isFaceUp ? 0 : 180
-//        self.isSelected = isSelected
-//    }
+    init(angle: Double = 50) {
+        self.x = 0.5 + 0.5 * Constants.shine.radius * cos(-(angle / 180) * 3.14159)
+        self.y = 0.5 + 0.5 * Constants.shine.radius * sin(-(angle / 180) * 3.14159)
+        print(x, y)
+    }
     
     
     func body(content: Content) -> some View {
@@ -24,16 +27,16 @@ struct Spherify: ViewModifier, Animatable {
                             .fill(RadialGradient(
                                 colors: [.clear, .black],
                                 center: UnitPoint(
-                                    x: Constants.shine.x,
-                                    y: Constants.shine.y),
+                                    x: x,
+                                    y: y),
                                 startRadius: 0, endRadius: CGFloat(geo.size.width)*1.1))
                             .opacity(Constants.shine.shadow)
                         Rectangle()
                             .fill(RadialGradient(
                                 colors: [.white, .clear],
                                 center: UnitPoint(
-                                    x: Constants.shine.x,
-                                    y: Constants.shine.y),
+                                    x: x,
+                                    y: y),
                                 startRadius: 0, endRadius: CGFloat(geo.size.width)*0.25))
                             .opacity(Constants.shine.reflect)
                     }
@@ -45,8 +48,7 @@ struct Spherify: ViewModifier, Animatable {
         
     struct Constants {
         struct shine {
-            static let x = 0.7
-            static let y = 0.2
+            static let radius = 0.8
             static let shadow = 0.7
             static let reflect = 0.3
         }
