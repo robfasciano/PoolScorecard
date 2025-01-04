@@ -113,9 +113,10 @@ struct StripeSolidView: View {
     func show(_ balls: Range<Int>) -> some View {
         return HStack {
             ForEach(balls, id: \.self) { ball in
-                PoolBallView(num: ball, mark: marked[ball])
+                PoolBallView(num: ball)
                     .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 720))
-                    .spherify()
+//                    .spherify(mark: marked[ball])
+                    .spherify(mark: marked[ball])
                     .onTapGesture {
                         marked[ball].toggle()
                     }

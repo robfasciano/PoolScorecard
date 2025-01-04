@@ -10,12 +10,14 @@ import SwiftUI
 struct Spherify: ViewModifier, Animatable {
     var x: CGFloat
     var y: CGFloat
+    var mark: Bool
     
-    init(angle: Double = 50) {
+    init(angle: Double = 50, mark: Bool = false) {
         self.x = 0.5 + 0.5 * Constants.shine.radius * cos(-(angle / 180) * 3.14159)
         self.y = 0.5 + 0.5 * Constants.shine.radius * sin(-(angle / 180) * 3.14159)
+        self.mark = mark
     }
-    
+
     
     func body(content: Content) -> some View {
         content
@@ -38,6 +40,10 @@ struct Spherify: ViewModifier, Animatable {
                                     y: y),
                                 startRadius: 0, endRadius: CGFloat(geo.size.width)*0.25))
                             .opacity(Constants.shine.reflect)
+                        Rectangle()
+                            .fill(.black)
+                            .aspectRatio(1, contentMode: .fit)
+                            .opacity(mark ? 0.6 : 0)
                     }
                 }
             }
@@ -55,8 +61,8 @@ struct Spherify: ViewModifier, Animatable {
 }
 
 extension View {
-    func spherify(angle: Double = 50) -> some View {
-        modifier(Spherify(angle: angle))
+    func spherify(angle: Double = 50, mark: Bool = false) -> some View {
+        modifier(Spherify(angle: angle, mark: mark))
     }
 }
 

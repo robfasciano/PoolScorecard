@@ -11,15 +11,15 @@ struct PoolBallView: View {
     let num: Int
     let mark: Bool
     
-    init(num: Int, mark: Bool) {
+    init(num: Int, mark: Bool = false) {
         self.num = num
         self.mark = mark
     }
 
-    init(num: Int) {
-        self.num = num
-        self.mark = false
-    }
+//    init(num: Int) {
+//        self.num = num
+//        self.mark = false
+//    }
 
     static let halfBallColors = [
         Color(red: 1.00, green: 0.601, blue: 0.013), //yellow
@@ -61,7 +61,6 @@ struct PoolBallView: View {
                 }
             }
             .rotationEffect(Angle(degrees: Double.random(in: -35...35)))
-            .opacity(mark ? 0.3 : 1)
     }
     
     struct Constants {
@@ -75,43 +74,48 @@ struct PoolBallView: View {
 
 
 #Preview {
-    HStack(spacing: 3) {
-        PoolBallView(num: 0, mark: true)
-            .spherify()
-        PoolBallView(num: 2, mark: true)
-            .spherify()
-        PoolBallView(num: 3)
-            .spherify()
-        PoolBallView(num: 4)
-            .spherify()
-        PoolBallView(num: 5)
-            .spherify()
+    ZStack {
+        Color(Color("Felt"))
+            .ignoresSafeArea()
+        VStack {
+            HStack(spacing: 3) {
+                PoolBallView(num: 0, mark: true)
+                    .spherify()
+                PoolBallView(num: 2, mark: true)
+                    .spherify()
+                PoolBallView(num: 3)
+                    .spherify()
+                PoolBallView(num: 4)
+                    .spherify()
+                PoolBallView(num: 5)
+                    .spherify()
+            }
+            HStack(spacing: 3) {
+                PoolBallView(num: 6, mark: true)
+                    .spherify()
+                PoolBallView(num: 7, mark: true)
+                    .spherify()
+                PoolBallView(num: 8)
+                    .spherify()
+                PoolBallView(num: 9)
+                    .spherify()
+                PoolBallView(num: 10)
+                    .spherify()
+            }
+            HStack(spacing: 3) {
+                PoolBallView(num: 11, mark: true)
+                    .spherify()
+                PoolBallView(num: 12, mark: true)
+                    .spherify()
+                PoolBallView(num: 13)
+                    .spherify()
+                PoolBallView(num: 14)
+                    .spherify()
+                PoolBallView(num: 15)
+                    .spherify()
+            }
+            //    PoolBallView(num: 8)
+            //        .spherify()
+        }
     }
-    HStack(spacing: 3) {
-        PoolBallView(num: 6, mark: true)
-            .spherify()
-        PoolBallView(num: 7, mark: true)
-            .spherify()
-        PoolBallView(num: 8)
-            .spherify()
-        PoolBallView(num: 9)
-            .spherify()
-        PoolBallView(num: 10)
-            .spherify()
-    }
-    HStack(spacing: 3) {
-        PoolBallView(num: 11, mark: true)
-            .spherify()
-        PoolBallView(num: 12, mark: true)
-            .spherify()
-        PoolBallView(num: 13)
-            .spherify()
-        PoolBallView(num: 14)
-            .spherify()
-        PoolBallView(num: 15)
-            .spherify()
-    }
-//    PoolBallView(num: 8)
-//        .spherify()
-
 }
