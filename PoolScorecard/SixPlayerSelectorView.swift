@@ -19,6 +19,8 @@ struct SixPlayerSelectorView: View {
     @State private var cueOnScreen = [false, false]
     @State private var selectorOnScreen = [true, true]
     
+    @State private var ballsVisible = false
+    
     @Environment(\.dismiss) var dismiss
     
     
@@ -26,7 +28,7 @@ struct SixPlayerSelectorView: View {
     
     var body: some View {
         GeometryReader {geometry in
-            Rectangle().foregroundStyle(PoolScorecardApp.Constants.feltColor)
+            Rectangle().foregroundStyle(Color("Felt"))
                 .ignoresSafeArea()
             VStack {
                 BackButton()
@@ -49,6 +51,11 @@ struct SixPlayerSelectorView: View {
                 }
             }
             .padding()
+            .onAppear{
+                withAnimation(.easeInOut(duration: Constants.duration.vertical)) {
+                    ballsVisible = true
+                }
+            }
         }
         .font(.system(size: baseFontSize))
         .minimumScaleFactor(0.01)
@@ -60,27 +67,33 @@ struct SixPlayerSelectorView: View {
         let option = 0
         return HStack(spacing: 0) {
             PoolBallView(num: 0).spherify()
-                .offset(x: cueOnScreen[option] ? Constants.offset : -300)
+                .offset(x: cueOnScreen[option] ? Constants.offset : -250)
             Group {
-                PoolBallView(num: 1).spherify()
-                PoolBallView(num: 1).spherify()
-                PoolBallView(num: 2).spherify()
-                PoolBallView(num: 2).spherify()
-                PoolBallView(num: 3).spherify()
-                PoolBallView(num: 3).spherify()
+                singleBall(ball: 1, row: option)
+                singleBall(ball: 1, row: option)
+                
+                singleBall(ball: 2, row: option)
+                singleBall(ball: 2, row: option)
+                
+                singleBall(ball: 3, row: option)
+                singleBall(ball: 3, row: option)
             }
             .opacity(showingStripeSolid6Sheet ? 0 : 1)
-            .offset(x: selectorOnScreen[option] ? Constants.offset : 800)
+            .offset(x: selectorOnScreen[option] ? Constants.offset : 1200)
+            .offset(y: ballsVisible ? 0 : 700)
             .onTapGesture {
-                withAnimation(.linear) {
+                withAnimation(.linear(duration: Constants.duration.cueIn)) {
                     cueOnScreen[option] = true
                 } completion: {
-                    withAnimation(.easeOut) {
+                    withAnimation(.easeOut(duration: Constants.duration.ballsOut)) {
                         selectorOnScreen[option] = false
                     } completion: {
-                        showingStripeSolid6Sheet.toggle()
-                        cueOnScreen[option] = false
-                        selectorOnScreen[option] = true
+                        withAnimation(.easeInOut.delay(1))  {
+                            showingStripeSolid6Sheet.toggle()
+                            selectorOnScreen[option] = true
+                        } completion: {
+                            cueOnScreen[option] = false
+                        }
                     }
                 }
             }
@@ -95,28 +108,33 @@ struct SixPlayerSelectorView: View {
         let option = 1
         return HStack(spacing: 0) {
             PoolBallView(num: 0).spherify()
-                .offset(x: cueOnScreen[option] ? Constants.offset : -300)
+                .offset(x: cueOnScreen[option] ? Constants.offset : -250)
             Group {
-                PoolBallView(num: 1).spherify()
-                PoolBallView(num: 1).spherify()
-                PoolBallView(num: 1).spherify()
-                PoolBallView(num: 2).spherify()
-                PoolBallView(num: 2).spherify()
-                PoolBallView(num: 2).spherify()
+                singleBall(ball: 1, row: option)
+                singleBall(ball: 1, row: option)
+                singleBall(ball: 1, row: option)
+
+                singleBall(ball: 2, row: option)
+                singleBall(ball: 2, row: option)
+                singleBall(ball: 2, row: option)
             }
             .opacity(showingCutthroat6Sheet ? 0 : 1)
-            .offset(x: selectorOnScreen[option] ? Constants.offset : 800)
+            .offset(x: selectorOnScreen[option] ? Constants.offset : 1200)
+            .offset(y: ballsVisible ? 0 : 1000)
             .opacity(showingCutthroat6Sheet ? 0 : 1)
             .onTapGesture {
-                withAnimation(.linear) {
+                withAnimation(.linear(duration: Constants.duration.cueIn)) {
                     cueOnScreen[option] = true
                 } completion: {
-                    withAnimation(.easeOut) {
+                    withAnimation(.easeOut(duration: Constants.duration.ballsOut)) {
                         selectorOnScreen[option] = false
                     } completion: {
-                        showingCutthroat6Sheet.toggle()
-                        cueOnScreen[option] = false
-                        selectorOnScreen[option] = true
+                        withAnimation(.easeInOut.delay(1))  {
+                            showingCutthroat6Sheet.toggle()
+                            selectorOnScreen[option] = true
+                        } completion: {
+                            cueOnScreen[option] = false
+                        }
                     }
                 }
             }
@@ -126,9 +144,21 @@ struct SixPlayerSelectorView: View {
         }
     }
     
+    func singleBall(ball: Int, row: Int) -> some View {
+            PoolBallView(num: ball)
+            .rotationEffect(Angle(degrees: selectorOnScreen[row] ? 0 : Constants.rotation))
+                .rotationEffect(Angle(degrees: ballsVisible ? 0 : Constants.rotation))
+               .spherify()
+    }
     
     struct Constants {
         static let offset = -95.0
+        static let rotation: Double = 720
+        struct duration {
+            static let vertical: TimeInterval = 1
+            static let cueIn: TimeInterval = 0.1
+            static let ballsOut: TimeInterval = 1.1
+        }
     }
 }
 

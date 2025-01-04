@@ -14,7 +14,6 @@ struct Spherify: ViewModifier, Animatable {
     init(angle: Double = 50) {
         self.x = 0.5 + 0.5 * Constants.shine.radius * cos(-(angle / 180) * 3.14159)
         self.y = 0.5 + 0.5 * Constants.shine.radius * sin(-(angle / 180) * 3.14159)
-        print(x, y)
     }
     
     

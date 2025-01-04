@@ -12,7 +12,7 @@ struct UltraView: View {
     @Binding var lightAngle: Double
             
     @State private var names = ["", "", "", "", "", ""] //need extra name to use same GetNewnames view
-    @State private var score = [0, 0, 0, 0, 0]
+    @State private var scores = [0, 0, 0, 0, 0]
     @State private var editingText = false
 
     @State private var showingNameSheet = false
@@ -33,14 +33,18 @@ struct UltraView: View {
                 //this landscape variable only gets updated when first entering the View
                 landscape = geometry.size.height > geometry.size.width ? false : true
                 return VStack {
-                    BackButton()
-                        .onTapGesture(perform: {
-                            lightAngle = ChooserView.Constants.lightAngle.initial
-                            withAnimation(.easeInOut(duration: ChooserView.Constants.lightAngle.duration)) {
-                                lightAngle = ChooserView.Constants.lightAngle.final
-                            }
-                            dismiss()
-                        })
+                    HStack {
+                        BackButton()
+                            .onTapGesture(perform: {
+                                lightAngle = ChooserView.Constants.lightAngle.initial
+                                withAnimation(.easeInOut(duration: ChooserView.Constants.lightAngle.duration)) {
+                                    lightAngle = ChooserView.Constants.lightAngle.final
+                                }
+                                dismiss()
+                            })
+                        shuffle
+                    }
+                    .frame(maxHeight: PoolScorecardApp.Constants.buttonHeight)
                     Grid() {
                         if !editingText {
                             ballGroups
@@ -57,7 +61,7 @@ struct UltraView: View {
                 .textFieldStyle(.automatic)
                 .multilineTextAlignment(.center)
                 .padding()
-                .background(PoolScorecardApp.Constants.feltColor)
+                .background(Color("Felt"))
                 .minimumScaleFactor(0.001)
                 .onAppear {
                     ballsVisible = true
@@ -66,7 +70,32 @@ struct UltraView: View {
         }
     }
     
-    
+    var shuffle: some View {
+        Button(action: {
+            let tempPlayers = names
+            let tempScores = scores
+            var shuffleOrder: [Int] = []
+            for i in 0...5 - 1 {
+                shuffleOrder.append(i)
+            }
+            shuffleOrder = shuffleOrder.shuffled()
+            
+            for i in 0...5 - 1 {
+                names[i] = tempPlayers[shuffleOrder[i]]
+                scores[i] = tempScores[shuffleOrder[i]]
+            }
+            withAnimation() {
+                ballsVisible = false
+                scorecard.clearStatus()
+            } completion: {
+                ballsVisible = true
+            }
+        })
+        {
+            ShuffleTeamsButtonView()
+        }
+    }
+
     
     
     var ballGroups: some View {
@@ -145,12 +174,12 @@ struct UltraView: View {
                 }
                 .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
                 .overlay(alignment: .topTrailing) {
-                    HatOverlay(score: score, which: which, name: names[which])
+                    HatOverlay(score: scores, which: which, name: names[which])
                         .onTapGesture(count: 2) {
-                            score[which] += 1
+                            scores[which] += 1
                         }
                         .onLongPressGesture {
-                            score[which] -= score[which] > 0 ? 1 : 0
+                            scores[which] -= scores[which] > 0 ? 1 : 0
                         }
                 }
                 .frame(maxHeight: height)

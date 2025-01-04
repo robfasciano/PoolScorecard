@@ -15,7 +15,7 @@ struct GetNewNames: View {
     
     var body: some View {
         ZStack {
-            Color(PoolScorecardApp.Constants.feltColor)
+            Color(Color("Felt"))
                 .ignoresSafeArea()
             
             VStack {
@@ -27,7 +27,7 @@ struct GetNewNames: View {
                 ScrollView {
                     ForEach(0..<6) { i in
                         TextField("Player \(i+1)", text: $names[i])
-                            .background(i < count ? PoolScorecardApp.Constants.feltColor : .gray)
+                            .background(i < count ? Color("Felt") : .gray)
 //                            .textInputCompletion("")
                     }
                     Spacer()

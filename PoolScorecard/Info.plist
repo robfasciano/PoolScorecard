@@ -7,5 +7,14 @@
 		<string>RedHatDisplay-VariableFont_wght.ttf</string>
 		<string>RedHatDisplay-Italic-VariableFont_wght.ttf</string>
 	</array>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>Felt</string>
+		<key>UIImageName</key>
+		<string>8Ball</string>
+		<key>UILaunchScreen</key>
+		<dict/>
+	</dict>
 </dict>
 </plist>

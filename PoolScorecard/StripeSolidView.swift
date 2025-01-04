@@ -17,6 +17,8 @@ struct StripeSolidView: View {
 //    @State private var Player4 = ""
     @State private var Players = ["", "", "", "", "", ""]
     @State private var score = [0, 0, 0, 0, 0, 0]
+    
+    @State private var marked: [Bool] = Array.init(repeating: false, count: 16)
 
     @State private var showingNameSheet = false
 
@@ -29,31 +31,33 @@ struct StripeSolidView: View {
     var body: some View {
         let nameSize: CGFloat = 100
         VStack {
-            BackButton()
-                .onTapGesture(perform: {
-                    lightAngle = ChooserView.Constants.lightAngle.initial
-                    withAnimation(.easeInOut(duration: ChooserView.Constants.lightAngle.duration)) {
-                        lightAngle = ChooserView.Constants.lightAngle.final
-                    }
-                    dismiss()
-                })
+            HStack {
+                BackButton()
+                    .onTapGesture(perform: {
+                        lightAngle = ChooserView.Constants.lightAngle.initial
+                        withAnimation(.easeInOut(duration: ChooserView.Constants.lightAngle.duration)) {
+                            lightAngle = ChooserView.Constants.lightAngle.final
+                        }
+                        dismiss()
+                    })
+            showOtherButtons
+            }
+            .frame(maxHeight: PoolScorecardApp.Constants.buttonHeight)
             VStack(spacing: 0) {
                 showNames(LeftmostName: 1)
                 show(solids)
             }
+            Spacer()
             VStack(spacing: 0) {
                 showNames(LeftmostName: 2)
                 show(stripes)
             }
-            Spacer()
-            showBottomButtons
-                .frame(maxHeight: PoolScorecardApp.Constants.buttonHeight)
         }
         .font(Font.custom(PoolScorecardApp.Constants.fontName, size: nameSize))
         .textFieldStyle(.automatic)
         .multilineTextAlignment(.center)
         .padding(50)
-        .background(PoolScorecardApp.Constants.feltColor)
+        .background(Color("Felt"))
         .minimumScaleFactor(0.01)
         .onAppear {
             ballsVisible = true
@@ -109,9 +113,12 @@ struct StripeSolidView: View {
     func show(_ balls: Range<Int>) -> some View {
         return HStack {
             ForEach(balls, id: \.self) { ball in
-                PoolBallView(num: ball)
+                PoolBallView(num: ball, mark: marked[ball])
                     .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 720))
                     .spherify()
+                    .onTapGesture {
+                        marked[ball].toggle()
+                    }
                     .offset(x: ballsVisible ? 0 : 2000, y: 0)
                     .animation(.easeInOut(duration: ballsVisible ? 1.6 : 0)
                         .delay(TimeInterval(Double(ball)/20)),value: ballsVisible)
@@ -119,7 +126,7 @@ struct StripeSolidView: View {
         }
     }
     
-    var showBottomButtons: some View {
+    var showOtherButtons: some View {
         HStack {
             swapBalls
             if numPlayers > 2 {
@@ -131,6 +138,8 @@ struct StripeSolidView: View {
     
     var swapBalls: some View {
         Button(action: {
+            marked = Array.init(repeating: false, count: 16)
+
             swapTwoPlayers(first: 0)
             swapTwoPlayers(first: 2)
             swapTwoPlayers(first: 4)
@@ -157,6 +166,8 @@ struct StripeSolidView: View {
     
     var swapTeams: some View {
         Button(action: {
+            marked = Array.init(repeating: false, count: 16)
+            
             let tempPlayers = Players
             let tempScores = score
             var shuffleOrder: [Int] = []

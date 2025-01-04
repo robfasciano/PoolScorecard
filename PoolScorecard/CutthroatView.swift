@@ -65,7 +65,7 @@ struct CutthroatView: View {
                 .font(Font.custom(PoolScorecardApp.Constants.fontName, size: Constants.Names.maxFont))
                 .textFieldStyle(.automatic)
                 .padding()
-                .background(PoolScorecardApp.Constants.feltColor)
+                .background(Color("Felt"))
                 .minimumScaleFactor(0.001)
                 .onAppear {
                     ballsVisible = true

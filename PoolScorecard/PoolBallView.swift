@@ -9,7 +9,18 @@ import SwiftUI
 
 struct PoolBallView: View {
     let num: Int
+    let mark: Bool
     
+    init(num: Int, mark: Bool) {
+        self.num = num
+        self.mark = mark
+    }
+
+    init(num: Int) {
+        self.num = num
+        self.mark = false
+    }
+
     static let halfBallColors = [
         Color(red: 1.00, green: 0.601, blue: 0.013), //yellow
         Color(red: 0.043, green: 0.181, blue: 0.564), //blue
@@ -22,35 +33,42 @@ struct PoolBallView: View {
     
     var body: some View {
         Rectangle()
-            .fill(num<9 ? PoolBallView.ballColors[num] : Constants.ballWhite)
+            .fill(Constants.ballWhite)
             .aspectRatio(1, contentMode: .fit)
             .overlay {
-                Rectangle()
-                    .fill(PoolBallView.ballColors[num])
-                    .aspectRatio(2, contentMode: .fit)
-                
-                    .overlay {
-                        Circle()
-                            .fill(Constants.ballWhite)
-                            .aspectRatio(0.75, contentMode: .fit)
-                            .overlay {
-                                Text(num > 0 ? String(num) : "")
-                                    .font(.system(size: Constants.maxTextSize))
-                                    .fontWeight(.bold)
-                                    .minimumScaleFactor(Constants.textScale)
-                                    .foregroundStyle(.black)
-                                    .aspectRatio(num<10 ? 0.45 : 0.7, contentMode: .fit)
-                            }
-                    }
+                    Rectangle()
+                        .fill(num<9 ? PoolBallView.ballColors[num] : .clear)
+                        .aspectRatio(1, contentMode: .fit)
+
+                .overlay {
+                    Rectangle()
+                        .fill(num<9 ? .clear : PoolBallView.ballColors[num])
+                        .aspectRatio(2, contentMode: .fit)
+                    
+                        .overlay {
+                            Circle()
+                                .fill(num == 0 ? .clear : Constants.ballWhite)
+                                .aspectRatio(0.75, contentMode: .fit)
+                                .overlay {
+                                    Text(num > 0 ? String(num) : "")
+                                        .font(.system(size: Constants.maxTextSize))
+                                        .fontWeight(.bold)
+                                        .minimumScaleFactor(Constants.textScale)
+                                        .foregroundStyle(.black)
+                                        .aspectRatio(num<10 ? 0.45 : 0.7, contentMode: .fit)
+                                }
+                        }
+                }
             }
             .rotationEffect(Angle(degrees: Double.random(in: -35...35)))
+            .opacity(mark ? 0.3 : 1)
     }
     
     struct Constants {
-        static let maxTextSize: CGFloat = 200
+        static let maxTextSize: CGFloat = 75
         static let minTextSize: CGFloat = 5
         static let textScale: CGFloat = minTextSize / maxTextSize
-        static let ballWhite = Color(red: 1.00, green: 0.900, blue: 0.650)
+        static let ballWhite = Color(red: 1.00, green: 0.920, blue: 0.790)
     }
     
 }
@@ -58,9 +76,9 @@ struct PoolBallView: View {
 
 #Preview {
     HStack(spacing: 3) {
-        PoolBallView(num: 0)
+        PoolBallView(num: 0, mark: true)
             .spherify()
-        PoolBallView(num: 2)
+        PoolBallView(num: 2, mark: true)
             .spherify()
         PoolBallView(num: 3)
             .spherify()
@@ -70,9 +88,9 @@ struct PoolBallView: View {
             .spherify()
     }
     HStack(spacing: 3) {
-        PoolBallView(num: 6)
+        PoolBallView(num: 6, mark: true)
             .spherify()
-        PoolBallView(num: 7)
+        PoolBallView(num: 7, mark: true)
             .spherify()
         PoolBallView(num: 8)
             .spherify()
@@ -82,9 +100,9 @@ struct PoolBallView: View {
             .spherify()
     }
     HStack(spacing: 3) {
-        PoolBallView(num: 11)
+        PoolBallView(num: 11, mark: true)
             .spherify()
-        PoolBallView(num: 12)
+        PoolBallView(num: 12, mark: true)
             .spherify()
         PoolBallView(num: 13)
             .spherify()

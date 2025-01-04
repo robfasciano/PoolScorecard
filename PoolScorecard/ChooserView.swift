@@ -27,7 +27,7 @@ struct ChooserView: View {
         GeometryReader {geometry in
             //            NavigationStack {
             //               ZStack {
-            Rectangle().foregroundStyle(PoolScorecardApp.Constants.feltColor)
+            Rectangle().foregroundStyle(Color("Felt"))
                 .ignoresSafeArea()
             VStack {
                 Spacer()
