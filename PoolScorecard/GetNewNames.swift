@@ -25,14 +25,18 @@ struct GetNewNames: View {
                     .fontWeight(.black)
                 Spacer()
                 ScrollView {
-                    ForEach(0..<6) { i in
-                        TextField("Player \(i+1)", text: $names[i])
-                            .background(i < count ? Color("Felt") : .gray)
-//                            .textInputCompletion("")
+                    VStack (spacing: 10) {
+                        ForEach(0..<6) { i in
+                            ZStack() {
+                                Text(names[i] == "" ? "Player \(i+1)" : " ")
+                                TextField("Player \(i+1)", text: $names[i])
+                                    .background(i < count ? .clear : .gray)
+                                    .border(.yellow)
+                            }
+                        }
                     }
-                    Spacer()
                 }
-                    
+                Spacer()
             }
             .font(Font.custom(PoolScorecardApp.Constants.fontName, size: 80))
             .foregroundStyle(PoolScorecardApp.Constants.textColor1)
@@ -46,5 +50,5 @@ struct GetNewNames: View {
 }
 
 #Preview {
-        GetNewNames(names: .constant(["Test Name That is Really, Really, Really, Really Long", "Player2", "X", "Test", "Player5", "Bubba"]), count: 6)
+    GetNewNames(names: .constant(["Test Name That is Really, Really, Really, Really Long", "Player2", "Test", "", "", "Bubba"]), count: 4)
 }
