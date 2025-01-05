@@ -9,18 +9,7 @@ import SwiftUI
 
 struct PoolBallView: View {
     let num: Int
-    let mark: Bool
     
-    init(num: Int, mark: Bool = false) {
-        self.num = num
-        self.mark = mark
-    }
-
-//    init(num: Int) {
-//        self.num = num
-//        self.mark = false
-//    }
-
     static let halfBallColors = [
         Color(red: 1.00, green: 0.601, blue: 0.013), //yellow
         Color(red: 0.043, green: 0.181, blue: 0.564), //blue
@@ -79,9 +68,9 @@ struct PoolBallView: View {
             .ignoresSafeArea()
         VStack {
             HStack(spacing: 3) {
-                PoolBallView(num: 0, mark: true)
+                PoolBallView(num: 0)
                     .spherify()
-                PoolBallView(num: 2, mark: true)
+                PoolBallView(num: 2)
                     .spherify()
                 PoolBallView(num: 3)
                     .spherify()
@@ -91,9 +80,9 @@ struct PoolBallView: View {
                     .spherify()
             }
             HStack(spacing: 3) {
-                PoolBallView(num: 6, mark: true)
+                PoolBallView(num: 6)
                     .spherify()
-                PoolBallView(num: 7, mark: true)
+                PoolBallView(num: 7)
                     .spherify()
                 PoolBallView(num: 8)
                     .spherify()
@@ -103,9 +92,9 @@ struct PoolBallView: View {
                     .spherify()
             }
             HStack(spacing: 3) {
-                PoolBallView(num: 11, mark: true)
+                PoolBallView(num: 11)
                     .spherify()
-                PoolBallView(num: 12, mark: true)
+                PoolBallView(num: 12)
                     .spherify()
                 PoolBallView(num: 13)
                     .spherify()

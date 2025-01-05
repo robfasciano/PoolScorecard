@@ -11,10 +11,6 @@ struct StripeSolidView: View {
     let numPlayers: Int
     @Binding var lightAngle: Double
 
-//    @State private var Player1 = ""
-//    @State private var Player2 = ""
-//    @State private var Player3 = ""
-//    @State private var Player4 = ""
     @State private var Players = ["", "", "", "", "", ""]
     @State private var score = [0, 0, 0, 0, 0, 0]
     

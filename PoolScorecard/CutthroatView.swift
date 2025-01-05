@@ -14,16 +14,20 @@ struct CutthroatView: View {
     @Binding var lightAngle: Double    
     
     @State private var showingNameSheet = false
+    @State private var showingPopover = Array.init(repeating: false, count: 16)
+
 
 //    @State var names = ["MattFayTheBrotherInLaw", "Bobby", "Ella", "Mom", "Dad", "Lily"]
-    @State private var names = ["", "", "", "", "", ""]
-    @State private var score = [0, 0, 0, 0, 0, 0]
+    @State private var names = Array.init(repeating: "", count: 6)
+    @State private var score = Array.init(repeating: 0, count: 6)
     @State private var results = [
-        [false, false, false], //L M H for p1
-        [false, false, false], //L M H for p2
-        [false, false, false]  //L M H for p3
+        Array.init(repeating: false, count: 3), //L M H for p1
+        Array.init(repeating: false, count: 3), //L M H for p2
+        Array.init(repeating: false, count: 3)  //L M H for p3
     ]
     
+    @State private var marked = Array.init(repeating: false, count: 16)
+
     @State var ballsVisible = false
     @Environment(\.dismiss) var dismiss
 
@@ -52,10 +56,10 @@ struct CutthroatView: View {
                                 dismiss()
                             })
                         swapTeams
-                    }
+                     }
                     .frame(maxHeight: PoolScorecardApp.Constants.buttonHeight)
                     Grid() {
-                            ballGroups
+                        ballGroups
                         nameRow(0, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
                         nameRow(1, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
                         nameRow(2, height: (geometry.size.height / 3) / (landscape ? 1 / Constants.Names.screenRatio.landscape : 1 / Constants.Names.screenRatio.portrait))
@@ -104,6 +108,7 @@ struct CutthroatView: View {
         {
             ShuffleTeamsButtonView()
         }
+        
     }
 
     
@@ -136,27 +141,76 @@ struct CutthroatView: View {
     func ballRow(_ balls: [Int], HSpacing: CGFloat = 0) -> some View {
         HStack(spacing: HSpacing) {
             Spacer()
-                PoolBallView(num: balls[0])
-                .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 1440))
-                .spherify()
-                .offset(x: ballsVisible ? 0 : 1000, y: 0)
-
-                .animation(.easeInOut(duration: ballsVisible ? 1.8 : 0)
-                    .delay(TimeInterval(Double(balls[0])/20)),value: ballsVisible)
-
-                if balls.count == 2 {
-                    PoolBallView(num: balls[1])
-                        .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 1440))
-                        .spherify()
-                        .offset(x: ballsVisible ? 0 : 1000, y: 0)
-                        .animation(.easeInOut(duration: ballsVisible ? 1.8 : 0)
-                            .delay(TimeInterval(Double(balls[1])/20)),value: ballsVisible)
-                }
+            oneBall(balls[0])
+            if balls.count == 2 {
+                oneBall(balls[1])
+            }
             Spacer()
+        }
+    }
+    
+    
+    func oneBall(_ ball: Int) -> some View {
+        PoolBallView(num: ball)
+        .rotationEffect(ballsVisible ? Angle(degrees: 0) : Angle(degrees: 1440))
+        .spherify(mark: marked[ball])
+        .offset(x: ballsVisible ? 0 : 1000, y: 0)
+        .onTapGesture {
+            marked[ball].toggle()
+            if marked[ball] {
+                showingPopover[ball] = true
             }
         }
+        .animation(.easeInOut(duration: ballsVisible ? 1.8 : 0)
+            .delay(TimeInterval(Double(ball)/20)),value: ballsVisible)
+        .popover(isPresented: $showingPopover[ball]) {
+            popoverView(ball)
+        }
+    }
+
+    func getName(_ which: Int) -> some View {
+        Text(names[which] == "" ? "Player \(which+1)" : names[which])
+    }
     
-  
+
+    func popoverView(_ ball: Int)-> some View {
+        VStack(spacing: 20) {
+            nameSelectButton(ball: ball, row: 0)
+            nameSelectButton(ball: ball, row: 1)
+            nameSelectButton(ball: ball, row: 2)
+        }
+        .font(Font.custom(PoolScorecardApp.Constants.fontName, size: 40))
+        .padding()
+    }
+
+    func processBallSunk(player: Int, level: Int) {
+        results[player][level] = true
+        if setCompleted(player, level) {
+            findCircles()
+        }
+    }
+    
+    func nameSelectButton(ball: Int, row: Int) -> some View {
+        Button {
+            showingPopover[ball] = false
+            if lowBalls.contains(ball) {
+                processBallSunk(player: row, level: 0)
+            } else if midBalls.contains(ball) {
+                processBallSunk(player: row, level: 1)
+            } else {
+                processBallSunk(player: row, level: 2)
+            }
+        } label: {
+            VStack(spacing: 0) {
+                getName(numPlayers < 6 ? row : row * 2)
+                if numPlayers >= 6 {
+                    getName(row * 2 + 1)
+                }
+            }
+        }
+        .buttonStyle(.borderedProminent)
+    }
+
     func nameRow(_ which: Int, height: CGFloat) -> some View {
         GridRow {
             Spacer()
@@ -181,7 +235,7 @@ struct CutthroatView: View {
         if numPlayers >= 6 {
             adjustedHeight = height/2
         }
-        return Text(names[which] == "" ? "Player \(which+1)" : names[which])
+        return getName(which)
             .shadow(color: teamColor[which / 2], radius: numPlayers >= 6 ? 15 : 0)
             .fontWeight(.bold)
             .minimumScaleFactor(0.01)
@@ -228,6 +282,7 @@ struct CutthroatView: View {
      func statButton(_ player: Int, _ level: String) -> some View {
         let indicators = ["L", "M", "H"]
         var  notIndicators = indicators
+         //TODO: prefer to not force unwrap this
         let i = indicators.firstIndex(of: level)!
         notIndicators.remove(at: i)
         var otherIndicators: [Int] = []
@@ -271,10 +326,7 @@ struct CutthroatView: View {
                 results[player][otherIndicators[1]] {
                 return
             }
-            results[player][i].toggle()
-            if setCompleted(player, i) {
-                findCircles()
-            }
+            processBallSunk(player: player, level: i)
         }
     }
     
@@ -360,6 +412,7 @@ struct CutthroatView: View {
                 results[i][j] = false
             }
         }
+        marked = Array.init(repeating: false, count: 16)
         withAnimation {
             ballsVisible = false
         } completion: {
