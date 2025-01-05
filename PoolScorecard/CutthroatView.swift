@@ -153,7 +153,9 @@ struct CutthroatView: View {
             .spherify(mark: marked[ball])
             .offset(x: ballsVisible ? 0 : 1000, y: 0)
             .onTapGesture {
-                marked[ball].toggle()
+                withAnimation(.spring) {
+                    marked[ball].toggle()
+                }
                 if marked[ball] {
                     showingPopover[ball] = true
                 }
@@ -247,10 +249,14 @@ struct CutthroatView: View {
                 }
             }
             .overlay {
-                Text(isPlayerDonezo(player: which) ? "☠️" : "")
-                    .aspectRatio(contentMode: .fit)
-                    .shadow(color: .red, radius: 5)
-                    .onTapGesture { showingNameSheet.toggle() }
+                if isPlayerDonezo(player: which) {
+                    Text("☠️")
+//                    Text(isPlayerDonezo(player: which) ? "☠️" : "")
+                        .aspectRatio(contentMode: .fit)
+                        .shadow(color: .red, radius: 5)
+                        .onTapGesture { showingNameSheet.toggle() }
+                        .transition(.asymmetric(insertion: .scale.animation(.bouncy), removal: .opacity))
+                }
             }
             .fullScreenCover(isPresented: $showingNameSheet) {
                 GetNewNames(names: $names, count: numPlayers)
@@ -348,7 +354,6 @@ struct CutthroatView: View {
         .fontWeight(.bold)
         .minimumScaleFactor(Constants.levelText.minFontScale)
         .foregroundStyle(PoolScorecardApp.Constants.textColor1)
-        
         .onTapGesture {
             processBallSunk(player: player, level: i, allowToggle: true)
         }
