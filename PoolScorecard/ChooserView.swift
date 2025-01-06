@@ -204,7 +204,6 @@ struct ChooserView: View {
             }
             .fullScreenCover(isPresented: $showingUltraSheet) {
                 UltraView(scorecard: ultraViewModel(), lightAngle: $lightAngle, names: $names)
-                
             }
     }
     

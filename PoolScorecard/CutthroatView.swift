@@ -249,7 +249,6 @@ struct CutthroatView: View {
             .overlay {
                 if isPlayerDonezo(player: which) {
                     Text("☠️")
-//                    Text(isPlayerDonezo(player: which) ? "☠️" : "")
                         .aspectRatio(contentMode: .fit)
                         .shadow(color: .red, radius: 5)
                         .onTapGesture { showingNameSheet.toggle() }
