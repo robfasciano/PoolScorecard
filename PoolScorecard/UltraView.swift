@@ -10,8 +10,9 @@ import SwiftUI
 struct UltraView: View {
     @ObservedObject var scorecard: ultraViewModel
     @Binding var lightAngle: Double
-            
-    @State private var names = ["", "", "", "", "", ""] //need extra name to use same GetNewnames view
+    @Binding var names: [String]
+    
+//    @State private var names = ["", "", "", "", "", ""] //need extra name to use same GetNewnames view
     @State private var scores = [0, 0, 0, 0, 0]
     @State private var editingText = false
 
@@ -261,5 +262,6 @@ struct UltraView: View {
 
 
 #Preview {
-    UltraView(scorecard: ultraViewModel(), lightAngle: .constant(90))
+    UltraView(scorecard: ultraViewModel(), lightAngle: .constant(90),
+              names: .constant(["","","","","",""]))
 }

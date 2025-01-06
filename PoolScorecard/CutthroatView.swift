@@ -12,13 +12,11 @@ var landscape: Bool = true
 struct CutthroatView: View {
     let numPlayers: Int
     @Binding var lightAngle: Double
-    
+    @Binding var names: [String]
+
     @State private var showingNameSheet = false
     @State private var showingPopover = Array.init(repeating: false, count: 16)
     
-    
-    //    @State var names = ["MattFayTheBrotherInLaw", "Bobby", "Ella", "Mom", "Dad", "Lily"]
-    @State private var names = Array.init(repeating: "", count: 6)
     @State private var score = Array.init(repeating: 0, count: 6)
     @State private var results = [
         Array.init(repeating: false, count: 3), //L M H for p1
@@ -476,5 +474,7 @@ struct CutthroatView: View {
 
 
 #Preview {
-    CutthroatView(numPlayers: 3, lightAngle: .constant(90))
+    CutthroatView(numPlayers: 3,
+                  lightAngle: .constant(90),
+                  names: .constant(["","","","","",""]))
 }

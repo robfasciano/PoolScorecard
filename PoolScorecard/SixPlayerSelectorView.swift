@@ -10,6 +10,7 @@ import SwiftUI
 
 struct SixPlayerSelectorView: View {
     @Binding var lightAngle: Double
+    @Binding var names: [String]
 
     @StateObject var scorecard = ultraViewModel()  //this is kind of @ObservedObject??
     
@@ -98,7 +99,7 @@ struct SixPlayerSelectorView: View {
                 }
             }
             .fullScreenCover(isPresented: $showingStripeSolid6Sheet) {
-                CutthroatView(numPlayers: 6, lightAngle: $lightAngle)
+                CutthroatView(numPlayers: 6, lightAngle: $lightAngle, names: $names)
             }
         }
     }
@@ -139,7 +140,7 @@ struct SixPlayerSelectorView: View {
                 }
             }
             .fullScreenCover(isPresented: $showingCutthroat6Sheet) {
-                StripeSolidView(numPlayers: 6, lightAngle: $lightAngle)
+                StripeSolidView(numPlayers: 6, lightAngle: $lightAngle, names: $names)
             }
         }
     }
@@ -164,5 +165,5 @@ struct SixPlayerSelectorView: View {
 
 
 #Preview {
-    SixPlayerSelectorView(lightAngle: .constant(90))
+    SixPlayerSelectorView(lightAngle: .constant(90), names: .constant(["", "", "", "", "", ""]))
 }

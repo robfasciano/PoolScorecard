@@ -10,8 +10,9 @@ import SwiftUI
 struct StripeSolidView: View {
     let numPlayers: Int
     @Binding var lightAngle: Double
-
-    @State private var Players = ["", "", "", "", "", ""]
+    @Binding var names: [String]
+    
+//    @Binding private var names = ["", "", "", "", "", ""]
     @State private var score = [0, 0, 0, 0, 0, 0]
     
     @State private var marked: [Bool] = Array.init(repeating: false, count: 16)
@@ -74,16 +75,16 @@ struct StripeSolidView: View {
     }
     
     func nameView(which: Int) -> some View {
-        Text(Players[which] == "" ? "Player \(which+1)" : Players[which])
+        Text(names[which] == "" ? "Player \(which+1)" : names[which])
             .onTapGesture {
                 showingNameSheet.toggle()
             }
             .fullScreenCover(isPresented: $showingNameSheet) {
-                GetNewNames(names: $Players, count: numPlayers)
+                GetNewNames(names: $names, count: numPlayers)
            }
-            .foregroundStyle(Players[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
+            .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
             .overlay(alignment: .topTrailing) {
-                HatOverlay(score: score, which: which, name: Players[which])
+                HatOverlay(score: score, which: which, name: names[which])
                     .onTapGesture(count: 2) {
                         addToRow(player: which, amount: 1)
                     }
@@ -152,11 +153,11 @@ struct StripeSolidView: View {
     }
 
     func swapTwoPlayers(first: Int) {
-        let temp = Players[first]
+        let temp = names[first]
         let tempScore = score[first]
-        Players[first] = Players[first+1]
+        names[first] = names[first+1]
         score[first] = score[first+1]
-        Players[first+1] = temp
+        names[first+1] = temp
         score[first+1] = tempScore
     }
     
@@ -165,7 +166,7 @@ struct StripeSolidView: View {
         Button(action: {
             marked = Array.init(repeating: false, count: 16)
             
-            let tempPlayers = Players
+            let tempPlayers = names
             let tempScores = score
             var shuffleOrder: [Int] = []
             for i in 0...numPlayers - 1 {
@@ -174,7 +175,7 @@ struct StripeSolidView: View {
             shuffleOrder = shuffleOrder.shuffled()
             
             for i in 0...numPlayers - 1 {
-                Players[i] = tempPlayers[shuffleOrder[i]]
+                names[i] = tempPlayers[shuffleOrder[i]]
                 score[i] = tempScores[shuffleOrder[i]]
             }
             withAnimation() {
@@ -192,5 +193,5 @@ struct StripeSolidView: View {
 
 #Preview {
 //    StripeSolidView(players: 2)
-    StripeSolidView(numPlayers: 6, lightAngle: .constant(90))
+    StripeSolidView(numPlayers: 6, lightAngle: .constant(90), names: .constant(["A", "B", "C", "D", "E", "F"]))
 }

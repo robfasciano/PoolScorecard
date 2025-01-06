@@ -17,9 +17,10 @@ struct ChooserView: View {
     @State private var showingUltraSheet = false
     @State private var showing6SelectorSheet = false
     @State private var lightAngle: Double = Constants.lightAngle.initial
+    
+    @State private var names = Array.init(repeating: "", count: 6)
+    //    @State private var names = ["MattFayTheBrotherInLaw", "Bobby", "Ella", "Mom", "Dad", "Lily"]
 
-//    @State private var onScreen4P1 = false
-//    @State private var onScreen4P2 = true
     @State private var cueOnScreen = [false, false, false, false, false]
     @State private var selectorOnScreen = [true, true, true, true, true]
     
@@ -99,7 +100,7 @@ struct ChooserView: View {
                 }
             }
             .fullScreenCover(isPresented: $showing2PSheet) {
-                StripeSolidView(numPlayers: numPlayers, lightAngle: $lightAngle)
+                StripeSolidView(numPlayers: numPlayers, lightAngle: $lightAngle, names: $names)
             }
     }
   
@@ -124,7 +125,7 @@ struct ChooserView: View {
                 }
             }
             .fullScreenCover(isPresented: $showing4PSheet) {
-                StripeSolidView(numPlayers: numPlayers, lightAngle: $lightAngle)
+                StripeSolidView(numPlayers: numPlayers, lightAngle: $lightAngle, names: $names)
             }
     }
         
@@ -149,7 +150,7 @@ struct ChooserView: View {
                 }
             }
             .fullScreenCover(isPresented: $showing6SelectorSheet) {
-                SixPlayerSelectorView(lightAngle: $lightAngle)
+                SixPlayerSelectorView(lightAngle: $lightAngle, names: $names)
             }
     }
 
@@ -177,7 +178,7 @@ struct ChooserView: View {
                 }
             }
             .fullScreenCover(isPresented: $showingCutthroatSheet) {
-                CutthroatView(numPlayers: 3, lightAngle: $lightAngle)
+                CutthroatView(numPlayers: 3, lightAngle: $lightAngle, names: $names)
             }
     }
     
@@ -202,7 +203,7 @@ struct ChooserView: View {
                 }
             }
             .fullScreenCover(isPresented: $showingUltraSheet) {
-                UltraView(scorecard: ultraViewModel(), lightAngle: $lightAngle)
+                UltraView(scorecard: ultraViewModel(), lightAngle: $lightAngle, names: $names)
                 
             }
     }
