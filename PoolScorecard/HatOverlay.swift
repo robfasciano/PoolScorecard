@@ -14,7 +14,8 @@ struct HatOverlay: View {
         
     var body: some View {
         Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
-            .rotationEffect(Angle(degrees: which < 5 ? 20 : 50))
+            .rotationEffect(Angle(degrees: which < 5 ? 20 :
+                (score[which] >= (score.max() ?? 0) ? 20 : 50)))
             .overlay(
                 Text("\(score[which])")
                     .fontWeight(.black)
@@ -40,5 +41,15 @@ struct HatOverlay: View {
     }
 }
 
-
+#Preview {
+    let Names = ["short", "A really, reall, really, really super duper long name", "Bobby", "A", "Fasciano", "Bubba Joe"]
+    ForEach(0..<Names.count, id: \.self) { i in
+        Text(Names[i])
+            .overlay(alignment: .topTrailing) {HatOverlay(score: [6, 1, 2, 3, 4, 5], which: i, name: Names[i])}
+            .font(Font.custom(PoolScorecardApp.Constants.fontName, size: 80))
+            .minimumScaleFactor(0.1)
+            .lineLimit(1)
+    }
+    .padding(.horizontal, 100)
+}
 
