@@ -275,8 +275,8 @@ struct CutthroatView: View {
             .fontWeight(.bold)
             .minimumScaleFactor(0.01)
             .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
-
-            .overlay(alignment: .topTrailing) {
+            .padding(.horizontal)
+            .overlay(alignment: .trailing) {
                 HatOverlay(score: score, which: which, name: names[which])
                     .onTapGesture() {
                         addToRow(player: which, amount: 1)

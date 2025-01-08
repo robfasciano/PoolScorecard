@@ -83,7 +83,8 @@ struct StripeSolidView: View {
                 GetNewNames(names: $names, count: numPlayers)
            }
             .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
-            .overlay(alignment: .topTrailing) {
+            .padding(.horizontal)
+            .overlay(alignment: .trailing) {
                 HatOverlay(score: score, which: which, name: names[which])
                     .onTapGesture(count: 2) {
                         addToRow(player: which, amount: 1)
