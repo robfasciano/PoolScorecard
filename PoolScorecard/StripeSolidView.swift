@@ -26,7 +26,6 @@ struct StripeSolidView: View {
     private let stripes = 9..<16
 
     var body: some View {
-        let nameSize: CGFloat = 100
         VStack {
             HStack {
                 BackButton()
@@ -50,7 +49,7 @@ struct StripeSolidView: View {
                 show(stripes)
             }
         }
-        .font(Font.custom(PoolScorecardApp.Constants.fontName, size: nameSize))
+        .font(Font.custom(PoolScorecardApp.Constants.fontName, size: Constants.nameSize))
         .textFieldStyle(.automatic)
         .multilineTextAlignment(.center)
         .padding(50)
@@ -83,10 +82,10 @@ struct StripeSolidView: View {
                 GetNewNames(names: $names, count: numPlayers)
            }
             .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
-            .padding(.horizontal)
+            .padding(.horizontal, 25)
             .overlay(alignment: .trailing) {
-                HatOverlay(score: score, which: which, name: names[which])
-                    .onTapGesture(count: 2) {
+                HatOverlay(score: score, which: which, name: names[which],size: Constants.nameSize)
+                    .onTapGesture() {
                         addToRow(player: which, amount: 1)
                     }
                     .onLongPressGesture {
@@ -190,6 +189,10 @@ struct StripeSolidView: View {
         }
     }
 
+    private struct Constants {
+        static let nameSize: CGFloat = 100
+    }
+    
 }
 
 #Preview {

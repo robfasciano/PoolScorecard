@@ -251,7 +251,7 @@ struct UltraView: View {
                     GetNewNames(names: $names, count: 5)
                 }
                 .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
-                .padding(.horizontal)
+                .padding(.horizontal, 25)
                 .overlay(alignment: .trailing) {
                     HatOverlay(score: scores, which: which, name: names[which])
                         .onTapGesture() {

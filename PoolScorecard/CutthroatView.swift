@@ -275,9 +275,9 @@ struct CutthroatView: View {
             .fontWeight(.bold)
             .minimumScaleFactor(0.01)
             .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
-            .padding(.horizontal)
+            .padding(.horizontal, 25)
             .overlay(alignment: .trailing) {
-                HatOverlay(score: score, which: which, name: names[which])
+                HatOverlay(score: score, which: which, name: names[which], size: Constants.Names.maxFont)
                     .onTapGesture() {
                         addToRow(player: which, amount: 1)
                     }
@@ -473,7 +473,7 @@ struct CutthroatView: View {
 
 
 #Preview {
-    CutthroatView(numPlayers: 3,
+    CutthroatView(numPlayers: 6,
                   lightAngle: .constant(90),
                   names: .constant(["","","","","",""]))
 }
