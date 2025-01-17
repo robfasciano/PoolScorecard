@@ -7,16 +7,20 @@
 
 import SwiftUI
 
+func displayName(_ names: [String], _ which: Int) -> String {
+    return (names[which] == "" ? "Player \(which+1)" : names[which])
+}
+
 struct HatOverlay: View {
     var score: [Int]
     var which: Int
     var name: String
-    var size: CGFloat = 80
+    var size: CGFloat
     
     var body: some View {
         Text(score[which] >= (score.max() ?? 0) && score[which] > 0 ? "👑" : PoolScorecardApp.Constants.hats[which])
             .font(.system(size: size * 2/3))
-            .border(.red)
+//            .border(.red)
             .rotationEffect(Angle(degrees: (which == 5) &&
                                     (score[which] <= (score.max() ?? 0)) ? 50 : 20))
             .minimumScaleFactor(1)
@@ -49,16 +53,16 @@ struct HatOverlay: View {
 }
 
 #Preview {
-    let Names = ["I", "A really, really, really, really super duper long name", "L", "A", "Player t", "Bubba Joe"]
+    let Names = ["I", "A really, really, really, really super duper long name", "L", "Aaa", "", "Bubba Joe"]
     let fontSize: CGFloat = 100
     let scores = [1, 1, 6, 3, 4, 5]
 //    let scores = [0, 0, 0, 0, 0, 0]
 
     VStack {
         ForEach(0..<Names.count, id: \.self) { i in
-            Text(Names[i])
+            Text(displayName(Names, i))
                 .padding(.horizontal, 25)
-                .overlay(alignment: .trailing) {HatOverlay(score: scores, which: i, name: Names[i], size: fontSize)}
+                .overlay(alignment: .trailing) {HatOverlay(score: scores, which: i, name: displayName(Names, i), size: fontSize)}
                 .font(Font.custom(PoolScorecardApp.Constants.fontName, size: fontSize))
                 .minimumScaleFactor(0.1)
                 .lineLimit(1)

@@ -26,11 +26,12 @@ struct UltraView: View {
     @State private var showingPopover = Array.init(repeating: false, count: 16)
 
     @State private var ballsVisible = false
+    @State private var showConfetti = false
+
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
-        let nameSize: CGFloat = 100
-        ZStack{ //right now, if user changes orientation during game, status resets (but not for cutthroat!)
+        ZStack { //right now, if user changes orientation during game, status resets (but not for cutthroat!)
             GeometryReader {geometry in //TODO: handle orientation better
                 //this landscape variable only gets updated when first entering the View
                 landscape = geometry.size.height > geometry.size.width ? false : true
@@ -47,7 +48,7 @@ struct UltraView: View {
                         shuffle
                     }
                     .frame(maxHeight: PoolScorecardApp.Constants.buttonHeight)
-                    Grid() {
+                    Grid(horizontalSpacing: 0) {
                             ballGroups
                         nameRow(0, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
                         nameRow(1, height: (geometry.size.height / 3) / (landscape ? 2.2 : 2.7))
@@ -57,8 +58,7 @@ struct UltraView: View {
                     }
                     Spacer()
                 }
-                .font(.system(size: nameSize))
-                .textFieldStyle(.automatic)
+                .font(Font.custom(PoolScorecardApp.Constants.fontName, size: Constants.Names.maxFont))                .textFieldStyle(.automatic)
                 .multilineTextAlignment(.center)
                 .padding()
                 .background(Color("Felt"))
@@ -67,6 +67,19 @@ struct UltraView: View {
                     ballsVisible = true
                 }
             }
+            Color(.clear)
+                .displayConfetti(isActive: $showConfetti)
+
+        }
+    }
+    
+    func restartActions() {
+        withAnimation() {
+//            ballsVisible = false
+            scorecard.clearStatus()
+            marked = Array.init(repeating: false, count: 16)
+        } completion: {
+            ballsVisible = true
         }
     }
     
@@ -84,12 +97,7 @@ struct UltraView: View {
                 names[i] = tempPlayers[shuffleOrder[i]]
                 scores[i] = tempScores[shuffleOrder[i]]
             }
-            withAnimation() {
-                ballsVisible = false
-                scorecard.clearStatus()
-            } completion: {
-                ballsVisible = true
-            }
+            restartActions()
         })
         {
             ShuffleTeamsButtonView()
@@ -100,6 +108,7 @@ struct UltraView: View {
         GridRow {
             Spacer()
             newGame
+                .frame(minWidth: 400)
             OneBallGroup(ultraLowBalls)
             OneBallGroup(lowBalls)
             OneBallGroup(midBalls)
@@ -110,42 +119,36 @@ struct UltraView: View {
     }
     
     func OneBallGroup(_ balls: [Int]) -> some View {
-        GeometryReader {geometry in
-            let ballPadding = 5.0
-            let iPad = 5.0 //padding between ball (HStack) when 2 in row
-            let ballWidth = geometry.size.width - 2*ballPadding
-            
+        return VStack(spacing: 0) {
+            Spacer()
             if landscape {
-                VStack(spacing: 0) {
-                    Spacer()
-                    ballRow([balls[0], balls[1]], HSpacing: iPad)
-                        .frame(width:  ballWidth + iPad)
+                if balls[0] % 2 == 1 {
+                    ballRow([balls[0], balls[1]], HSpacing: Constants.iPad)
                     ballRow([balls[2]])
-                        .frame(width:  ballWidth / 2 )
+                } else {
+                    ballRow([balls[0]])
+                    ballRow([balls[1], balls[2]], HSpacing: Constants.iPad)
                 }
             } else {
-                VStack {
-                    Spacer()
-                    ballRow([balls[0]])
-                    ballRow([balls[1]])
-                    ballRow([balls[2]])
-                }
-                .padding(0)
+                ballRow([balls[0]])
+                ballRow([balls[1]])
+                ballRow([balls[2]])
             }
         }
+        .padding(0)
+//        .border(.red)
     }
 
     
     
     func ballRow(_ balls: [Int], HSpacing: CGFloat = 0) -> some View {
         HStack(spacing: HSpacing) {
-            Spacer()
             oneBall(ball: balls[0])
             if balls.count == 2 {
                 oneBall(ball: balls[1])
             }
-            Spacer()
         }
+        .padding(.horizontal, Constants.groupToGroupPadding)
     }
     
     func oneBall(ball: Int) -> some View {
@@ -167,11 +170,7 @@ struct UltraView: View {
             popoverView(ball)
         }
     }
-    
-    func getName(_ which: Int) -> some View {
-        Text(names[which] == "" ? "Player \(which+1)" : names[which])
-    }
-    
+        
     
     func popoverView(_ ball: Int)-> some View {
         VStack(spacing: 20) {
@@ -213,7 +212,7 @@ struct UltraView: View {
                 processBallSunk(player: row, level: 4)
             }
         } label: {
-            getName(row)
+            Text(displayName(names, row))
         }
         .buttonStyle(.borderedProminent)
     }
@@ -243,7 +242,7 @@ struct UltraView: View {
     func nameRow(_ which: Int, height: CGFloat) -> some View {
         GridRow {
             Spacer()
-            Text(names[which] == "" ? "Player \(which+1)" : names[which])
+            Text(displayName(names, which))
                 .onTapGesture {
                     showingNameSheet.toggle()
                 }
@@ -253,9 +252,12 @@ struct UltraView: View {
                 .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
                 .padding(.horizontal, 25)
                 .overlay(alignment: .trailing) {
-                    HatOverlay(score: scores, which: which, name: names[which])
+                    HatOverlay(score: scores, which: which, name: displayName(names, which), size: Constants.Names.maxFont)
                         .onTapGesture() {
                             scores[which] += 1
+                            showConfetti = true
+                            restartActions()
+
                         }
                         .onLongPressGesture {
                             scores[which] -= scores[which] > 0 ? 1 : 0
@@ -277,7 +279,7 @@ struct UltraView: View {
             statButton(which, indicators[3]).frame(maxHeight: height)
             statButton(which, indicators[4]).frame(maxHeight: height)
             Spacer()
-        }.minimumScaleFactor(0.001)
+        }.minimumScaleFactor(0.01)
     }
 
         
@@ -309,6 +311,7 @@ struct UltraView: View {
                 Text(level)
             }
         }
+        .foregroundStyle(PoolScorecardApp.Constants.textColor1)
         .onTapGesture {
             scorecard.selectIndicator(player: player, indicator: i)
         }
@@ -320,6 +323,7 @@ struct UltraView: View {
         
     func circleALevel(_ level: String) -> some View {
         Text(level)
+            .bold()
             .overlay(Circle().stroke(lineWidth: 10).aspectRatio(1, contentMode: .fill))
             .foregroundStyle(.red)
     }
@@ -327,12 +331,7 @@ struct UltraView: View {
     
     var newGame: some View {
         Button(action: {
-            scorecard.clearStatus()
-            withAnimation {
-                ballsVisible = false
-            } completion: {
-                ballsVisible = true
-            }
+            restartActions()
         })
         {
             NewGameView(ballsVisible: ballsVisible)
@@ -340,8 +339,12 @@ struct UltraView: View {
     }
     
     struct Constants {
+        static let groupToGroupPadding = 15.0
         static let ballPadding = 5.0
         static let iPad = 5.0 //padding between ball (HStack) when 2 in row
+        struct Names {
+            static let maxFont: CGFloat = 100
+        }
     }
 
 }

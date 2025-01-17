@@ -26,6 +26,7 @@ struct NewGameView: View {
                 .shadow(color: .white, radius: 20)
 //                .shadow(color: PoolScorecardApp.Constants.textColor2, radius: 30)
 //                .opacity(0.9)
+                .padding()
         }
     }
     

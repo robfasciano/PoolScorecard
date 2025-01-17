@@ -27,6 +27,8 @@ struct CutthroatView: View {
     @State private var marked = Array.init(repeating: false, count: 16)
     
     @State var ballsVisible = false
+    @State private var showConfetti = false
+
     @Environment(\.dismiss) var dismiss
     
     
@@ -73,6 +75,9 @@ struct CutthroatView: View {
                     ballsVisible = true
                 }
             }
+            Color(.clear)
+                .displayConfetti(isActive: $showConfetti)
+
         }
     }
     
@@ -165,11 +170,6 @@ struct CutthroatView: View {
             }
     }
     
-    func getName(_ which: Int) -> some View {
-        Text(names[which] == "" ? "Player \(which+1)" : names[which])
-    }
-    
-    
     func popoverView(_ ball: Int)-> some View {
         VStack(spacing: 20) {
             nameSelectButton(ball: ball, row: 0)
@@ -208,9 +208,9 @@ struct CutthroatView: View {
             }
         } label: {
             VStack(spacing: 0) {
-                getName(numPlayers < 6 ? row : row * 2)
+                Text(displayName(names, numPlayers < 6 ? row : row * 2))
                 if numPlayers >= 6 {
-                    getName(row * 2 + 1)
+                    Text(displayName(names, row * 2 + 1))
                 }
             }
         }
@@ -270,16 +270,17 @@ struct CutthroatView: View {
         if numPlayers >= 6 {
             adjustedHeight = height/2
         }
-        return getName(which)
+        return Text(displayName(names, which))
             .shadow(color: teamColor[which / 2], radius: numPlayers >= 6 ? 15 : 0)
             .fontWeight(.bold)
             .minimumScaleFactor(0.01)
             .foregroundStyle(names[which] == "" ? .gray : PoolScorecardApp.Constants.textColor1)
             .padding(.horizontal, 25)
             .overlay(alignment: .trailing) {
-                HatOverlay(score: score, which: which, name: names[which], size: Constants.Names.maxFont)
+                HatOverlay(score: score, which: which, name: displayName(names, which), size: Constants.Names.maxFont)
                     .onTapGesture() {
                         addToRow(player: which, amount: 1)
+                        showConfetti = true
                     }
                     .onLongPressGesture {
                         score[which] -= score[which] > 0 ? 1 : 0
@@ -457,7 +458,7 @@ struct CutthroatView: View {
         static let ballPadding = 5.0
         static let iPad = 5.0 //padding between ball (HStack) when 2 in row
         struct Names {
-            static let maxFont: CGFloat = 120
+            static let maxFont: CGFloat = 100
             struct screenRatio {
                 static let landscape: CGFloat = 1 / 1.8
                 static let portrait: CGFloat = 1 / 2.0
